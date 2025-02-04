@@ -4,34 +4,85 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  background: linear-gradient(135deg, rgba(17, 25, 40, 0.95), rgba(17, 25, 40, 0.9)),
+              url('/images/auth-bg.jpg') center/cover no-repeat;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .auth-card {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 2.5rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  padding: 2.5rem;
+  background: rgba(17, 25, 40, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.37),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--accent-1),
+    var(--accent-2),
+    var(--accent-3)
+  );
 }
 
 .auth-card h2 {
   font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
   text-align: center;
-  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  background-clip: text;
+  background: linear-gradient(
+    135deg,
+    var(--accent-1),
+    var(--accent-2) 50%,
+    var(--accent-3)
+  );
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0.8;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 .form-group {
@@ -40,39 +91,183 @@
 
 .form-group input {
   width: 100%;
-  padding: 1rem;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   color: var(--text-primary);
   font-size: 1rem;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .form-group input:focus {
   outline: none;
   border-color: var(--accent-1);
-  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.1);
 }
 
 .form-group input::placeholder {
   color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Date input specific styles */
+.form-group input[type="date"] {
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.7;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  scale: 1.1;
+}
+
+.form-group input[type="date"]::-webkit-datetime-edit {
+  color: var(--text-primary);
+}
+
+.form-group input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+.form-group input[type="date"]::-webkit-datetime-edit-text {
+  padding: 0 0.3em;
+  color: var(--text-secondary);
+}
+
+.form-group input[type="date"]::-webkit-datetime-edit-month-field,
+.form-group input[type="date"]::-webkit-datetime-edit-day-field,
+.form-group input[type="date"]::-webkit-datetime-edit-year-field {
+  padding: 0;
+  color: var(--text-primary);
 }
 
 .auth-button {
   margin-top: 0.5rem;
   padding: 1rem;
-  background: linear-gradient(135deg, var(--accent-2), var(--accent-3));
   border: none;
   border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    var(--accent-1),
+    var(--accent-2) 50%,
+    var(--accent-3)
+  );
   color: var(--bg-darker);
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.auth-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 20px rgba(34, 211, 238, 0.3),
+    0 0 0 1px rgba(34, 211, 238, 0.1);
+}
+
+.auth-button:hover::before {
+  left: 100%;
+}
+
+.auth-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-button.loading {
+  position: relative;
+  color: transparent;
+}
+
+.auth-button.loading::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 50%;
+  left: 50%;
+  margin: -12px 0 0 -12px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-top-color: var(--bg-darker);
+  border-radius: 50%;
+  animation: button-loading 0.8s ease infinite;
+}
+
+@keyframes button-loading {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: rgb(239, 68, 68);
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-footer {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.auth-footer a {
+  color: var(--accent-1);
+  text-decoration: none;
+  margin-left: 0.5rem;
+  font-weight: 500;
   transition: all 0.2s ease;
 }
 
-.auth-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(129, 140, 248, 0.2);
+.auth-footer a:hover {
+  color: var(--accent-2);
+  text-decoration: underline;
 }

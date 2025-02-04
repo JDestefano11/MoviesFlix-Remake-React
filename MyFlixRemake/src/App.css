@@ -1,8 +1,84 @@
+:root {
+  --bg-darker: #0a0910;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-1: #ef4444;
+  --accent-2: #f87171;
+  --accent-3: #fca5a5;
+  --accent-2-rgb: 248, 113, 113;
+  --neon-purple: #7A0BC0;
+  --neon-teal: #34D9C9;
+  --primary-dark: #1A1D23;
+}
+
 #root {
-  max-width: 1280px;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-darker);
+  color: var(--text-primary);
+  min-height: 100vh;
+  background: 
+    linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(10, 9, 16, 0.95)),
+    radial-gradient(circle at top left, rgba(239, 68, 68, 0.15), transparent 50%),
+    radial-gradient(circle at bottom right, rgba(248, 113, 113, 0.1), transparent 50%),
+    radial-gradient(circle at center, rgba(252, 165, 165, 0.05), transparent 50%);
+}
+
+.app {
+  min-height: 100vh;
+  position: relative;
+  background: 
+    linear-gradient(45deg, rgba(239, 68, 68, 0.03) 0%, transparent 40%),
+    linear-gradient(135deg, rgba(252, 165, 165, 0.05) 10%, transparent 50%),
+    linear-gradient(225deg, rgba(248, 113, 113, 0.03) 20%, transparent 60%);
+}
+
+.main-content {
+  padding: 5rem 2rem 2rem;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 4.5rem 1rem 1rem;
+  }
+}
+
+/* Modern gradient overlay */
+.gradient-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at top right, rgba(239, 68, 68, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at bottom left, rgba(252, 165, 165, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at center, rgba(248, 113, 113, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .logo {
@@ -26,38 +102,42 @@
   color: #888;
 }
 
-.app {
-  min-height: 100vh;
-  position: relative;
-}
-
-.main-content {
-  padding: 5rem 2rem 2rem;
+.content {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
-@media (max-width: 768px) {
-  .main-content {
-    padding: 4.5rem 1rem 1rem;
-  }
+.interactive {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* Modern gradient overlay */
-.app::after {
+.interactive::after {
   content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: absolute;
   width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at center, 
-      transparent 0%,
-      var(--primary-dark) 100%);
-  pointer-events: none;
-  z-index: -1;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--accent-1),
+    var(--accent-2),
+    var(--accent-3)
+  );
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.interactive:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 h1 {
@@ -74,41 +154,4 @@ h1 {
   color: transparent;
   margin: 2rem 0;
   letter-spacing: -0.5px;
-}
-
-.content {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-/* Add cool hover effect for interactive elements */
-.interactive {
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.interactive:hover {
-  transform: translateY(-2px);
-}
-
-.interactive::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--neon-purple),
-    var(--neon-teal)
-  );
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.interactive:hover::after {
-  transform: scaleX(1);
 }
