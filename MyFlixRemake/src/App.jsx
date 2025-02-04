@@ -1,9 +1,11 @@
 import React from 'react'
+import './App.css'
 
 function App() {
   return (
-    <div>
-      <h1>MyFlix</h1>
+    <div className="app">
+      <div className="gradient-bg" />
+
     </div>
   )
 }
