@@ -45,24 +45,57 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
         </Link>
       </div>
 
-      <div className={`navbar-links ${isMobileMenuOpen ? 'active' : ''}`}>
-        <div className="nav-items">
-          <Link to="/" className="nav-link" onClick={handleLinkClick}>
+      <div className="nav-center desktop-only">
+        <Link to="/" className="nav-center-link" onClick={handleLinkClick}>
+          Home
+        </Link>
+        {isLoggedIn && (
+          <>
+            <Link to="/movies" className="nav-center-link" onClick={handleLinkClick}>
+              Movies
+            </Link>
+            <Link to="/profile" className="nav-center-link" onClick={handleLinkClick}>
+              Profile
+            </Link>
+          </>
+        )}
+      </div>
+
+      <div className="auth-buttons desktop-only">
+        {!isLoggedIn ? (
+          <>
+            <Link to="/login" className="btn btn-login" onClick={handleLinkClick}>
+              Login
+            </Link>
+            <Link to="/signup" className="btn btn-signup" onClick={handleLinkClick}>
+              Sign Up
+            </Link>
+          </>
+        ) : (
+          <button className="btn btn-signup" onClick={handleLogout}>
+            Logout
+          </button>
+        )}
+      </div>
+
+      <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+        <div className="mobile-nav-links">
+          <Link to="/" className="nav-center-link" onClick={handleLinkClick}>
             Home
           </Link>
           {isLoggedIn && (
             <>
-              <Link to="/movies" className="nav-link" onClick={handleLinkClick}>
+              <Link to="/movies" className="nav-center-link" onClick={handleLinkClick}>
                 Movies
               </Link>
-              <Link to="/profile" className="nav-link" onClick={handleLinkClick}>
+              <Link to="/profile" className="nav-center-link" onClick={handleLinkClick}>
                 Profile
               </Link>
             </>
           )}
         </div>
 
-        <div className="auth-buttons">
+        <div className="mobile-auth-buttons">
           {!isLoggedIn ? (
             <>
               <Link to="/login" className="btn btn-login" onClick={handleLinkClick}>

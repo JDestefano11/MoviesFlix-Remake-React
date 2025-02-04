@@ -22,7 +22,7 @@ const Home = () => {
             to reviews and trailers, everything you need to know about films in one place.
           </p>
           <div className="hero-cta">
-            <Link to="/movies" className="cta-button primary">Explore Movies</Link>
+            <Link to="/login" className="cta-button primary">Explore Movies</Link>
             <Link to="/signup" className="cta-button secondary">Join Now</Link>
           </div>
         </div>
