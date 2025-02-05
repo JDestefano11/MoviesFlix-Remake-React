@@ -1,20 +1,21 @@
 .movie-card {
   position: relative;
-  background: var(--card-bg);
+  background: var(--surface);
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s ease;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   height: 100%;
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  backdrop-filter: blur(10px);
 }
 
 .movie-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  border-color: var(--accent-primary);
+  border-color: var(--accent-1);
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.4);
 }
 
 .movie-poster {
@@ -107,7 +108,7 @@
   padding: 3px 8px;
   background: var(--hover-bg);
   border-radius: 12px;
-  color: var(--accent-primary);
+  color: var(--accent-1);
   font-size: 0.75rem;
   font-weight: 500;
 }
@@ -164,7 +165,7 @@
 }
 
 .action-button:hover {
-  background: var(--accent-primary);
+  background: var(--accent-1);
   color: white;
 }
 
@@ -300,7 +301,7 @@
 }
 
 .featured.movie-card .action-button:hover {
-  background: var(--accent-primary);
+  background: var(--accent-1);
   transform: translateY(-2px);
 }
 
@@ -337,7 +338,7 @@
   height: 40px;
   border: 3px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  border-top-color: var(--accent-primary);
+  border-top-color: var(--accent-1);
   animation: spin 1s ease-in-out infinite;
 }
 

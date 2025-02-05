@@ -4,6 +4,10 @@
   --text-secondary: #D1D5DB;
   --accent-primary: #3B82F6;
   --accent-secondary: #10B981;
+  --bg-dark: #2f2f2f;
+  --bg-darker: #1a1a1a;
+  --surface: #2f2f2f;
+  --accent-green: #34C759;
 }
 
 * {
@@ -50,25 +54,17 @@ body::before {
 }
 
 .app {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--bg-dark) 0%,
+    var(--bg-darker) 50%,
+    var(--bg-dark) 100%
+  );
+  color: var(--text-primary);
 }
 
-.main-content {
-  padding: 5rem 2rem 2rem;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-@media (max-width: 768px) {
-  .main-content {
-    padding: 4.5rem 1rem 1rem;
-  }
-}
-
-/* Modern gradient overlay */
 .gradient-bg {
   position: fixed;
   top: 0;
@@ -76,10 +72,21 @@ body::before {
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at top right, rgba(239, 68, 68, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at bottom left, rgba(252, 165, 165, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at center, rgba(248, 113, 113, 0.05) 0%, transparent 50%);
-  pointer-events: none;
+    radial-gradient(
+      circle at top right,
+      rgba(34, 211, 238, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(130, 140, 248, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at center,
+      rgba(15, 23, 42, 0.8) 0%,
+      rgba(2, 6, 23, 0.95) 100%
+    );
   z-index: 0;
   animation: gradientShift 15s ease infinite;
 }
@@ -93,6 +100,34 @@ body::before {
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+
+.app > *:not(.gradient-bg) {
+  position: relative;
+  z-index: 1;
+}
+
+.movie-card,
+.feature-card,
+.modal-content {
+  background: linear-gradient(
+    145deg,
+    var(--surface) 0%,
+    rgba(30, 41, 59, 0.8) 100%
+  );
+}
+
+.main-content {
+  padding: 5rem 2rem 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 4.5rem 1rem 1rem;
   }
 }
 
