@@ -19,7 +19,8 @@ const MOCK_MOVIES = [
     cast: "Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page",
     awards: "4 Academy Awards",
     trending: true,
-    genres: ["Action", "Sci-Fi", "Thriller"]
+    genres: ["Action", "Sci-Fi", "Thriller"],
+    trailer: "https://www.youtube.com/embed/YoHD9XEInc0"
   },
   {
     id: 2,
@@ -34,7 +35,8 @@ const MOCK_MOVIES = [
     cast: "Christian Bale, Heath Ledger, Aaron Eckhart",
     awards: "2 Academy Awards",
     trending: true,
-    genres: ["Action", "Crime", "Drama"]
+    genres: ["Action", "Crime", "Drama"],
+    trailer: "https://www.youtube.com/embed/EXeTwQWrcwY"
   },
   {
     id: 3,
@@ -49,7 +51,8 @@ const MOCK_MOVIES = [
     cast: "Matthew McConaughey, Anne Hathaway, Jessica Chastain",
     awards: "Academy Award for Best Visual Effects",
     trending: false,
-    genres: ["Adventure", "Drama", "Sci-Fi"]
+    genres: ["Adventure", "Drama", "Sci-Fi"],
+    trailer: "https://www.youtube.com/embed/zSWdZVtXT7E"
   },
   {
     id: 4,
@@ -64,7 +67,8 @@ const MOCK_MOVIES = [
     cast: "Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss",
     awards: "4 Academy Awards",
     trending: false,
-    genres: ["Action", "Sci-Fi"]
+    genres: ["Action", "Sci-Fi"],
+    trailer: "https://www.youtube.com/embed/vKQi3bBA1y8"
   },
   {
     id: 5,
@@ -79,7 +83,8 @@ const MOCK_MOVIES = [
     cast: "John Travolta, Samuel L. Jackson, Uma Thurman",
     awards: "Academy Award for Best Original Screenplay",
     trending: false,
-    genres: ["Crime", "Drama"]
+    genres: ["Crime", "Drama"],
+    trailer: "https://www.youtube.com/embed/s7EdQ4FqbhY"
   },
   {
     id: 6,
@@ -94,7 +99,8 @@ const MOCK_MOVIES = [
     cast: "Sam Worthington, Zoe Saldana, Sigourney Weaver",
     awards: "3 Academy Awards",
     trending: true,
-    genres: ["Action", "Adventure", "Fantasy", "Sci-Fi"]
+    genres: ["Action", "Adventure", "Fantasy", "Sci-Fi"],
+    trailer: "https://www.youtube.com/embed/5PSNL1qE6VY"
   },
   {
     id: 7,
@@ -109,7 +115,8 @@ const MOCK_MOVIES = [
     cast: "Tim Robbins, Morgan Freeman",
     awards: "7 Academy Award Nominations",
     trending: false,
-    genres: ["Drama"]
+    genres: ["Drama"],
+    trailer: "https://www.youtube.com/embed/6hB3S9bIaco"
   },
   {
     id: 8,
@@ -124,7 +131,8 @@ const MOCK_MOVIES = [
     cast: "Marlon Brando, Al Pacino",
     awards: "3 Academy Awards",
     trending: false,
-    genres: ["Crime", "Drama"]
+    genres: ["Crime", "Drama"],
+    trailer: "https://www.youtube.com/embed/sY1sY6Ji0lo"
   },
   {
     id: 9,
@@ -139,7 +147,8 @@ const MOCK_MOVIES = [
     cast: "Brad Pitt, Edward Norton",
     awards: "Academy Award Nomination",
     trending: false,
-    genres: ["Drama", "Thriller"]
+    genres: ["Drama", "Thriller"],
+    trailer: "https://www.youtube.com/embed/qtRKdVHc-cQ"
   },
   {
     id: 10,
@@ -154,7 +163,8 @@ const MOCK_MOVIES = [
     cast: "Tom Hanks, Robin Wright",
     awards: "6 Academy Awards",
     trending: false,
-    genres: ["Drama", "Romance"]
+    genres: ["Drama", "Romance"],
+    trailer: "https://www.youtube.com/embed/uPIEn0M8su0"
   },
   {
     id: 11,
@@ -169,7 +179,8 @@ const MOCK_MOVIES = [
     cast: "Robert De Niro, Ray Liotta",
     awards: "Academy Award for Best Supporting Actor",
     trending: false,
-    genres: ["Crime", "Drama"]
+    genres: ["Crime", "Drama"],
+    trailer: "https://www.youtube.com/embed/qDp3RqjJn9s"
   },
   {
     id: 12,
@@ -184,7 +195,8 @@ const MOCK_MOVIES = [
     cast: "Jodie Foster, Anthony Hopkins",
     awards: "5 Academy Awards",
     trending: false,
-    genres: ["Crime", "Thriller"]
+    genres: ["Crime", "Thriller"],
+    trailer: "https://www.youtube.com/embed/W6Mm8Sbe__o"
   },
   {
     id: 13,
@@ -199,7 +211,8 @@ const MOCK_MOVIES = [
     cast: "Russell Crowe, Joaquin Phoenix",
     awards: "5 Academy Awards",
     trending: true,
-    genres: ["Action", "Drama"]
+    genres: ["Action", "Drama"],
+    trailer: "https://www.youtube.com/embed/owK1qxDselE"
   },
   {
     id: 14,
@@ -214,7 +227,8 @@ const MOCK_MOVIES = [
     cast: "Elijah Wood, Ian McKellen",
     awards: "4 Academy Awards",
     trending: true,
-    genres: ["Adventure", "Fantasy"]
+    genres: ["Adventure", "Fantasy"],
+    trailer: "https://www.youtube.com/embed/V75dMMIWJ2s"
   },
   {
     id: 15,
@@ -229,7 +243,8 @@ const MOCK_MOVIES = [
     cast: "Sam Neill, Laura Dern",
     awards: "3 Academy Awards",
     trending: false,
-    genres: ["Adventure", "Sci-Fi"]
+    genres: ["Adventure", "Sci-Fi"],
+    trailer: "https://www.youtube.com/embed/lc0UehYemQA"
   }
 ];
 

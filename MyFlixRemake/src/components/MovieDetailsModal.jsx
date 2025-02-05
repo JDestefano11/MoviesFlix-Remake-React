@@ -68,6 +68,19 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
               <FaHeart />
               {isFavorite(movie.id) ? 'Remove from Favorites' : 'Add to Favorites'}
             </button>
+            {movie.trailer && (
+              <div className="modal-trailer">
+                <iframe
+                  width="100%"
+                  height="315"
+                  src={movie.trailer}
+                  title={`${movie.title} Trailer`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            )}
           </div>
         </div>
 
