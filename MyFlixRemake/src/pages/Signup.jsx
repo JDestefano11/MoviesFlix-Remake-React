@@ -39,7 +39,6 @@ export default function Signup() {
       return false;
     }
 
-    // Validate birthday (must be at least 13 years old)
     const birthDate = new Date(formData.birthday);
     const today = new Date();
     const age = today.getFullYear() - birthDate.getFullYear();
@@ -64,34 +63,9 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      // Simulating API call with timeout
       await new Promise(resolve => setTimeout(resolve, 1500));
-
-      /*
-      const response = await fetch('https://moviesflix-hub-fca46ebf9888.herokuapp.com/users/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          birthday: formData.birthday
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Registration failed');
-      }
-
-      const data = await response.json();
-      */
-
-      // For now, just show success in console
       console.log('Registration successful!', formData);
       navigate('/login');
-      
     } catch (error) {
       setError('Registration failed. Please try again.');
       console.error('Error:', error);
@@ -103,8 +77,10 @@ export default function Signup() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Create Account</h2>
-        <p className="auth-subtitle">Join our community of movie enthusiasts</p>
+        <div className="auth-header">
+          <h2>Create Account</h2>
+          <p className="auth-subtitle">Join the MoviesFlix community</p>
+        </div>
 
         {error && (
           <div className="error-message">
@@ -119,58 +95,67 @@ export default function Signup() {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
+            <label htmlFor="username">Username</label>
             <input
+              id="username"
               type="text"
               name="username"
-              placeholder="Username"
+              placeholder="Choose a username"
               value={formData.username}
               onChange={handleChange}
               disabled={loading}
             />
           </div>
+
           <div className="form-group">
+            <label htmlFor="email">Email</label>
             <input
+              id="email"
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
               disabled={loading}
             />
           </div>
+
           <div className="form-group">
+            <label htmlFor="password">Password</label>
             <input
+              id="password"
               type="password"
               name="password"
-              placeholder="Password"
+              placeholder="Create a password"
               value={formData.password}
               onChange={handleChange}
               disabled={loading}
             />
           </div>
+
           <div className="form-group">
+            <label htmlFor="birthday">Birthday</label>
             <input
+              id="birthday"
               type="date"
               name="birthday"
-              placeholder="Birthday"
               value={formData.birthday}
               onChange={handleChange}
               disabled={loading}
-              max={new Date().toISOString().split('T')[0]}
-              className="date-input"
             />
           </div>
+
           <button 
             type="submit" 
-            className={`auth-button ${loading ? 'loading' : ''}`}
             disabled={loading}
           >
-            {loading ? 'Creating Account...' : 'Sign Up'}
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
         <div className="auth-footer">
-          Already have an account?<Link to="/login">Login</Link>
+          Already have an account?
+          <Link to="/login">Sign in</Link>
         </div>
       </div>
     </div>

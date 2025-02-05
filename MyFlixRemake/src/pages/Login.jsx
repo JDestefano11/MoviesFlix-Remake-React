@@ -58,8 +58,8 @@ const Login = ({ setIsLoggedIn }) => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <h2>Welcome to MoviesFlix</h2>
-          <p className="auth-subtitle">Your gateway to endless entertainment</p>
+          <h2>Welcome Back</h2>
+          <p className="auth-subtitle">Sign in to continue your journey</p>
         </div>
 
         {error && (
@@ -101,14 +101,6 @@ const Login = ({ setIsLoggedIn }) => {
             />
           </div>
 
-          <div className="dev-mode-notice">
-            <p>Development Mode Credentials:</p>
-            <code>
-              Username: {DEV_CREDENTIALS.username}<br />
-              Password: {DEV_CREDENTIALS.password}
-            </code>
-          </div>
-
           <button 
             type="submit" 
             className={`auth-button ${loading ? 'loading' : ''}`}
@@ -117,10 +109,10 @@ const Login = ({ setIsLoggedIn }) => {
             {loading ? (
               <>
                 <span className="spinner"></span>
-                Logging in...
+                Signing in...
               </>
             ) : (
-              'Login'
+              'Sign In'
             )}
           </button>
         </form>

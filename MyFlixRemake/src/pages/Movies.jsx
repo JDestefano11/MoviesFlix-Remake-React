@@ -428,7 +428,7 @@ const MOCK_MOVIES = [
     id: 31,
     title: "The Princess Bride",
     description: "While home sick in bed, a young boy's grandfather reads him the story of a farmboy-turned-pirate who encounters numerous obstacles, enemies and allies in his quest to be reunited with his true love.",
-    poster: "https://image.tmdb.org/t/p/original/dvjqlp2sAhUeFjUOfQDgqwpphHj.jpg",
+    poster: "https://image.tmdb.org/t/p/original/dvjqlp2J1yMQmeq20Qblg61T.jpg",
     category: "Fantasy",
     duration: "1h 38min",
     year: 1987,
@@ -567,68 +567,66 @@ const Movies = () => {
 
   return (
     <div className="movies-container">
-      <div className="epic-header">
-        <div className="search-section">
-          <div className={`search-container ${searchFocused ? 'focused' : ''}`}>
-            <FaSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Search movies by title, description, or category..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
-              className="search-input"
-            />
-          </div>
-          <div className="view-controls">
-            <button 
-              className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
-              onClick={() => setViewMode('grid')}
-            >
-              <FaTh />
-            </button>
-            <button 
-              className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
-              onClick={() => setViewMode('list')}
-            >
-              <FaList />
-            </button>
-          </div>
+      <div className="search-section">
+        <div className={`search-container ${searchFocused ? 'focused' : ''}`}>
+          <FaSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search movies by title, description, or category..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
+            className="search-input"
+          />
         </div>
+        <div className="view-controls">
+          <button 
+            className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
+            onClick={() => setViewMode('grid')}
+          >
+            <FaTh />
+          </button>
+          <button 
+            className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
+            onClick={() => setViewMode('list')}
+          >
+            <FaList />
+          </button>
+        </div>
+      </div>
         
-        <div className="filter-section">
-          <div className="genre-filters">
+      <div className="filter-section">
+        <div className="genre-filters">
+          <button
+            className={`genre-button ${selectedGenre === 'All' ? 'active' : ''}`}
+            onClick={() => setSelectedGenre('All')}
+          >
+            <FaFilm /> All Genres
+          </button>
+          {GENRES.map(genre => (
             <button
-              className={`genre-button ${selectedGenre === 'All' ? 'active' : ''}`}
-              onClick={() => setSelectedGenre('All')}
+              key={genre}
+              className={`genre-button ${selectedGenre === genre ? 'active' : ''}`}
+              onClick={() => setSelectedGenre(genre)}
             >
-              <FaFilm /> All Genres
+              {genre}
             </button>
-            {GENRES.map(genre => (
-              <button
-                key={genre}
-                className={`genre-button ${selectedGenre === genre ? 'active' : ''}`}
-                onClick={() => setSelectedGenre(genre)}
-              >
-                {genre}
-              </button>
-            ))}
-          </div>
-          <div className="active-filters">
-            {searchTerm && (
-              <span className="filter-tag">
-                Search: {searchTerm}
-                <button onClick={() => setSearchTerm('')}>×</button>
-              </span>
-            )}
-            {selectedGenre !== 'All' && (
-              <span className="filter-tag">
-                Genre: {selectedGenre}
-                <button onClick={() => setSelectedGenre('All')}>×</button>
-              </span>
-            )}
-          </div>
+          ))}
+        </div>
+        <div className="active-filters">
+          {searchTerm && (
+            <span className="filter-tag">
+              Search: {searchTerm}
+              <button onClick={() => setSearchTerm('')}>×</button>
+            </span>
+          )}
+          {selectedGenre !== 'All' && (
+            <span className="filter-tag">
+              Genre: {selectedGenre}
+              <button onClick={() => setSelectedGenre('All')}>×</button>
+            </span>
+          )}
         </div>
       </div>
 
@@ -660,31 +658,6 @@ const Movies = () => {
               isFavorite={favorites.includes(movie.id)}
             />
           ))}
-      </div>
-
-      <div className="stats-footer">
-        <div className="stat-item">
-          <FaFilm />
-          <div className="stat-content">
-            <strong>{filteredMovies.length}</strong>
-            <span>Movies</span>
-          </div>
-        </div>
-        <div className="stat-item">
-          <FaHeart />
-          <div className="stat-content">
-            <strong>{favorites.length}</strong>
-            <span>Favorites</span>
-          </div>
-        </div>
-        {selectedGenre !== 'All' && (
-          <div className="stat-item">
-            <div className="stat-content">
-              <strong>{filteredMovies.length}</strong>
-              <span>{selectedGenre} Movies</span>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

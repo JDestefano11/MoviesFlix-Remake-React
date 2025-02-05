@@ -1,42 +1,58 @@
 :root {
-  --bg-darker: #111928;
-  --text-primary: #ffffff;
-  --text-secondary: #9ca3af;
-  --accent-1: #22d3ee;
-  --accent-2: #6366f1;
-  --accent-3: #8b5cf6;
-  --neon-purple: #7A0BC0;
-  --neon-teal: #34D9C9;
-  --primary-dark: #1A1D23;
+  --background: #111827;
+  --text-primary: #F9FAFB;
+  --text-secondary: #D1D5DB;
+  --accent-primary: #3B82F6;
+  --accent-secondary: #10B981;
 }
 
-#root {
-  width: 100%;
-  min-height: 100vh;
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background: var(--background);
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--bg-darker);
   color: var(--text-primary);
-  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: 
-    linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(10, 9, 16, 0.95)),
-    radial-gradient(circle at top left, rgba(239, 68, 68, 0.15), transparent 50%),
-    radial-gradient(circle at bottom right, rgba(248, 113, 113, 0.1), transparent 50%),
-    radial-gradient(circle at center, rgba(252, 165, 165, 0.05), transparent 50%);
+    radial-gradient(circle at 20% 150%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% -50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 10% 0%, rgba(52, 211, 153, 0.1) 0%, transparent 30%),
+    radial-gradient(circle at 90% 90%, rgba(96, 165, 250, 0.1) 0%, transparent 40%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
 }
 
 .app {
-  min-height: 100vh;
-  position: relative;
-  background: 
-    linear-gradient(45deg, rgba(239, 68, 68, 0.03) 0%, transparent 40%),
-    linear-gradient(135deg, rgba(252, 165, 165, 0.05) 10%, transparent 50%),
-    linear-gradient(225deg, rgba(248, 113, 113, 0.03) 20%, transparent 60%);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-content {
@@ -125,9 +141,9 @@ body {
   left: 0;
   background: linear-gradient(
     to right,
-    var(--accent-1),
-    var(--accent-2),
-    var(--accent-3)
+    var(--accent-primary),
+    var(--accent-secondary),
+    var(--accent-green)
   );
   transform: scaleX(0);
   transform-origin: right;
@@ -144,9 +160,9 @@ h1 {
   font-weight: 800;
   background: linear-gradient(
     to right,
-    var(--accent-1),
-    var(--accent-2),
-    var(--accent-3)
+    var(--accent-primary),
+    var(--accent-secondary),
+    var(--accent-green)
   );
   background-clip: text;
   -webkit-background-clip: text;
