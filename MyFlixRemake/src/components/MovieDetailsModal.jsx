@@ -64,9 +64,10 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
             <button 
               className={`favorite-btn ${isFavorite(movie.id) ? 'active' : ''}`}
               onClick={handleFavoriteClick}
+              title={isFavorite(movie.id) ? 'Remove from Favorites' : 'Add to Favorites'}
             >
               <FaHeart />
-              {isFavorite(movie.id) ? 'Remove from Favorites' : 'Add to Favorites'}
+              <span>Favorite</span>
             </button>
             {movie.trailer && (
               <div className="modal-trailer">
@@ -83,7 +84,8 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
             )}
           </div>
         </div>
-
+        <div className="modal-actions">
+        </div>
         <div className="modal-body">
           <p className="synopsis">{movie.description}</p>
           <div className="movie-details">
