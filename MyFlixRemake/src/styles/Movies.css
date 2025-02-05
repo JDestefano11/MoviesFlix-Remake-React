@@ -15,47 +15,13 @@
 .movies-container {
   min-height: calc(100vh - 60px);
   padding: 80px 20px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-bg) 0%,
+    var(--secondary-bg) 100%
+  );
   color: var(--text-primary);
   margin-top: 60px;
-  position: relative;
-}
-
-.movies-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 500px;
-  background-image: url('https://image.tmdb.org/t/p/original/tfw5LKySp7uEYJ3CUuD4TKx3s8y.jpg');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.3;
-  z-index: 0;
-}
-
-.movies-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 500px;
-  background: linear-gradient(
-    to bottom,
-    rgba(17, 24, 39, 0.5) 0%,
-    rgba(17, 24, 39, 0.8) 50%,
-    var(--primary-bg) 100%
-  );
-  z-index: 1;
-}
-
-.search-section,
-.filter-section,
-.featured-section,
-.movies-grid {
-  position: relative;
-  z-index: 2;
 }
 
 .search-section {
@@ -259,11 +225,6 @@
 }
 
 @media (max-width: 768px) {
-  .movies-container::before,
-  .movies-container::after {
-    height: 300px;
-  }
-
   .search-section {
     flex-direction: column;
     gap: 15px;

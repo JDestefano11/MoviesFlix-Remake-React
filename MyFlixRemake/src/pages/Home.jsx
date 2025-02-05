@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom';
 import { BiMoviePlay, BiCameraMovie } from 'react-icons/bi';
 import { MdMovieFilter } from 'react-icons/md';
 import '../styles/Home.css';
-import heroBackground from '../assets/images/theater-seats.jpg';
 
 const Home = () => {
   return (
     <div className="home">
-      <div className="hero-background" style={{ backgroundImage: `url(${heroBackground})` }}>
+      <div className="hero-background">
         <div className="overlay"></div>
       </div>
       <section className="hero-section">
