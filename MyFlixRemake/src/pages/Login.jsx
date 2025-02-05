@@ -20,31 +20,33 @@ const Login = ({ setIsLoggedIn }) => {
     setError('');
   };
 
+  // Temporary dev credentials
+  const DEV_CREDENTIALS = {
+    username: 'admin',
+    password: 'admin123'
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    // Frontend validation
-    if (!formData.username || !formData.password) {
-      setError('All fields are required');
-      setLoading(false);
-      return;
-    }
-
     try {
-      // Simulating API call with timeout
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 800));
 
-      // For demo purposes, let's use some hardcoded credentials
-      if (formData.username === 'demo' && formData.password === 'password') {
-        // Store token in localStorage (in real app, this would come from the backend)
-        localStorage.setItem('token', 'demo-token');
+      // Development mode: check against temporary credentials
+      if (formData.username === DEV_CREDENTIALS.username && 
+          formData.password === DEV_CREDENTIALS.password) {
+        localStorage.setItem('token', 'dev-token-12345');
+        localStorage.setItem('username', formData.username);
         setIsLoggedIn(true);
         navigate('/movies');
-      } else {
-        setError('Invalid username or password');
+        return;
       }
+
+      // Show error for invalid credentials
+      setError('Invalid username or password');
     } catch (error) {
       setError('An error occurred. Please try again.');
     } finally {
@@ -55,8 +57,10 @@ const Login = ({ setIsLoggedIn }) => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Welcome Back</h2>
-        <p className="auth-subtitle">Your movies are waiting for you</p>
+        <div className="auth-header">
+          <h2>Welcome to MoviesFlix</h2>
+          <p className="auth-subtitle">Your gateway to endless entertainment</p>
+        </div>
 
         {error && (
           <div className="error-message">
@@ -71,36 +75,58 @@ const Login = ({ setIsLoggedIn }) => {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
+            <label htmlFor="username">Username</label>
             <input
+              id="username"
               type="text"
               name="username"
-              placeholder="Username"
+              placeholder="Enter your username"
               value={formData.username}
               onChange={handleChange}
               disabled={loading}
+              autoComplete="username"
             />
           </div>
           <div className="form-group">
+            <label htmlFor="password">Password</label>
             <input
+              id="password"
               type="password"
               name="password"
-              placeholder="Password"
+              placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
               disabled={loading}
+              autoComplete="current-password"
             />
           </div>
+
+          <div className="dev-mode-notice">
+            <p>Development Mode Credentials:</p>
+            <code>
+              Username: {DEV_CREDENTIALS.username}<br />
+              Password: {DEV_CREDENTIALS.password}
+            </code>
+          </div>
+
           <button 
             type="submit" 
             className={`auth-button ${loading ? 'loading' : ''}`}
             disabled={loading}
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? (
+              <>
+                <span className="spinner"></span>
+                Logging in...
+              </>
+            ) : (
+              'Login'
+            )}
           </button>
         </form>
 
         <div className="auth-footer">
-          Don't have an account?<Link to="/signup">Sign up</Link>
+          <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
         </div>
       </div>
     </div>
