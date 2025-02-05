@@ -4,10 +4,10 @@ import MovieDetailsModal from './MovieDetailsModal';
 import { useFavorites } from '../context/FavoritesContext';
 import '../styles/MovieCard.css';
 
-const MovieCard = ({ movie, isFeatured = false }) => {
+const MovieCard = ({ movie, isFeatured = false, allMovies }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [showDetails, setShowDetails] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { toggleFavorite, isFavorite } = useFavorites();
 
   const handleImageLoad = () => {
@@ -39,7 +39,7 @@ const MovieCard = ({ movie, isFeatured = false }) => {
   };
 
   const handleCardClick = () => {
-    setShowDetails(true);
+    setIsModalOpen(true);
   };
 
   return (
@@ -121,13 +121,16 @@ const MovieCard = ({ movie, isFeatured = false }) => {
         </div>
       </div>
 
-      <MovieDetailsModal
-        movie={movie}
-        isOpen={showDetails}
-        onClose={() => setShowDetails(false)}
-        isFavorite={isFavorite(movie.id)}
-        onFavorite={toggleFavorite}
-      />
+      {isModalOpen && (
+        <MovieDetailsModal
+          movie={movie}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          allMovies={allMovies}
+          isFavorite={isFavorite(movie.id)}
+          onFavorite={toggleFavorite}
+        />
+      )}
     </>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import MovieCard from '../components/MovieCard';
+import MovieDetailsModal from '../components/MovieDetailsModal';
 import { FaSearch, FaTh, FaList, FaFilter, FaClock, FaFilm, FaHeart } from 'react-icons/fa';
 import { useFavorites } from '../context/FavoritesContext';
 import '../styles/Movies.css';
@@ -243,6 +244,7 @@ const Movies = () => {
   const [selectedGenre, setSelectedGenre] = useState('All');
   const [featuredMovie, setFeaturedMovie] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState('');
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   // Initialize featured movie on mount
   useEffect(() => {
@@ -328,6 +330,16 @@ const Movies = () => {
     [movies, searchTerm, selectedGenre]
   );
 
+  // Add event listener for opening movie modals
+  useEffect(() => {
+    const handleOpenMovieModal = (event) => {
+      setSelectedMovie(event.detail.movie);
+    };
+
+    window.addEventListener('openMovieModal', handleOpenMovieModal);
+    return () => window.removeEventListener('openMovieModal', handleOpenMovieModal);
+  }, []);
+
   return (
     <div className="movies-container">
       <div className="search-section">
@@ -394,34 +406,31 @@ const Movies = () => {
       </div>
 
       {featuredMovie && !searchTerm && selectedGenre === 'All' && (
-        <div className="featured-section">
+        <div className="featured-movie-section">
           <div className="featured-header">
             <h2>Movie of the Day</h2>
             <div className="featured-timer">
               <FaClock /> Changes in: {timeRemaining}
             </div>
           </div>
-          <MovieCard 
-            movie={featuredMovie}
-            isFeatured={true}
-            onFavorite={() => toggleFavorite(featuredMovie)}
-            isFavorite={isFavorite(featuredMovie.id)}
-          />
+          <MovieCard movie={featuredMovie} isFeatured={true} allMovies={movies} />
         </div>
       )}
 
-      <div className={`movies-grid ${viewMode}`}>
-        {filteredMovies
-          .filter(movie => movie.id !== featuredMovie?.id || searchTerm || selectedGenre !== 'All')
-          .map(movie => (
-            <MovieCard
-              key={movie.id}
-              movie={movie}
-              onFavorite={() => toggleFavorite(movie)}
-              isFavorite={isFavorite(movie.id)}
-            />
-          ))}
+      <div className={`movies-grid ${viewMode === 'list' ? 'list-view' : ''}`}>
+        {filteredMovies.map((movie) => (
+          <MovieCard key={movie.id} movie={movie} allMovies={movies} />
+        ))}
       </div>
+
+      {selectedMovie && (
+        <MovieDetailsModal
+          movie={selectedMovie}
+          isOpen={!!selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+          allMovies={movies}
+        />
+      )}
     </div>
   );
 };
