@@ -159,18 +159,68 @@
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
   padding: 0;
   position: relative;
   z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .movies-grid.list-view {
   grid-template-columns: 1fr;
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1600px) {
+  .movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .movies-container {
+    padding: 10px;
+  }
+
+  .search-section {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .filter-buttons {
+    justify-content: center;
+  }
+
+  .featured-movie-section .movie-card .movie-poster {
+    height: 300px;
+  }
+
+  .movies-grid.list-view .movie-card {
+    grid-template-columns: 120px 1fr;
+    height: 180px;
+  }
+
+  .movies-grid.list-view .movie-content {
+    padding: 1rem;
+  }
+
+  .movies-grid.list-view .movie-title {
+    font-size: 1.2rem;
+  }
+
+  .movies-grid.list-view .movie-description {
+    -webkit-line-clamp: 2;
+    font-size: 0.9rem;
+  }
 }
 
 .movies-grid.list-view .movie-card {
@@ -262,48 +312,4 @@
 
 .featured-movie-section .movie-card .movie-poster {
   height: 400px;
-}
-
-@media (max-width: 768px) {
-  .movies-container {
-    padding: 10px;
-  }
-
-  .movies-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-    padding: 15px;
-  }
-
-  .search-section {
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-  }
-
-  .filter-buttons {
-    justify-content: center;
-  }
-
-  .featured-movie-section .movie-card .movie-poster {
-    height: 300px;
-  }
-
-  .movies-grid.list-view .movie-card {
-    grid-template-columns: 120px 1fr;
-    height: 180px;
-  }
-
-  .movies-grid.list-view .movie-content {
-    padding: 1rem;
-  }
-
-  .movies-grid.list-view .movie-title {
-    font-size: 1.2rem;
-  }
-
-  .movies-grid.list-view .movie-description {
-    -webkit-line-clamp: 2;
-    font-size: 0.9rem;
-  }
 }

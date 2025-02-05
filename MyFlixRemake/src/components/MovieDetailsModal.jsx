@@ -41,8 +41,8 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <button className="close-button" onClick={onClose}>
-          <FaTimes />
+        <button className="close-button" onClick={onClose} aria-label="Close modal">
+          <FaTimes color="#ffffff" size={24} />
         </button>
 
         <div className="modal-header">
