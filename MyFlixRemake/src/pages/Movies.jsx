@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import MovieCard from '../components/MovieCard';
 import MovieDetailsModal from '../components/MovieDetailsModal';
-import { FaSearch, FaTh, FaList, FaFilter, FaClock, FaFilm, FaHeart } from 'react-icons/fa';
+import { FaSearch, FaTh, FaList, FaFilter, FaClock, FaFilm, FaHeart, FaFire } from 'react-icons/fa';
 import { useFavorites } from '../context/FavoritesContext';
 import '../styles/Movies.css';
 
@@ -406,16 +406,28 @@ const Movies = () => {
         </div>
         <div className="active-filters">
           {searchTerm && (
-            <span className="filter-tag">
-              Search: {searchTerm}
-              <button onClick={() => setSearchTerm('')}>×</button>
-            </span>
+            <div className="filter-tag">
+              <span className="filter-tag-text">
+                Search: {searchTerm}
+              </span>
+              <button className="filter-tag-close" onClick={() => setSearchTerm('')}>
+                <svg viewBox="0 0 20 20" fill="currentColor" className="close-icon">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
           )}
           {selectedGenre !== 'All' && (
-            <span className="filter-tag">
-              Genre: {selectedGenre}
-              <button onClick={() => setSelectedGenre('All')}>×</button>
-            </span>
+            <div className="filter-tag">
+              <span className="filter-tag-text">
+                Genre: {selectedGenre}
+              </span>
+              <button className="filter-tag-close" onClick={() => setSelectedGenre('All')}>
+                <svg viewBox="0 0 20 20" fill="currentColor" className="close-icon">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -446,6 +458,58 @@ const Movies = () => {
           allMovies={movies}
         />
       )}
+
+      <div className="stats-section">
+        <div className="stats-content">
+          <div className="stat-item">
+            <div className="stat-icon">
+              <FaFilm />
+            </div>
+            <div className="stat-info">
+              <div className="stat-value">
+                {selectedGenre === 'All' 
+                  ? movies.length 
+                  : movies.filter(movie => movie.category === selectedGenre).length}
+              </div>
+              <div className="stat-label">
+                {selectedGenre === 'All' ? 'Total Movies' : `${selectedGenre} Movies`}
+              </div>
+            </div>
+          </div>
+
+          <div className="stat-item">
+            <div className="stat-icon heart">
+              <FaHeart />
+            </div>
+            <div className="stat-info">
+              <div className="stat-value">
+                {selectedGenre === 'All'
+                  ? favorites.length
+                  : favorites.filter(movie => movie.category === selectedGenre).length}
+              </div>
+              <div className="stat-label">
+                {selectedGenre === 'All' ? 'Favorites' : `${selectedGenre} Favorites`}
+              </div>
+            </div>
+          </div>
+
+          <div className="stat-item">
+            <div className="stat-icon trending">
+              <FaFire />
+            </div>
+            <div className="stat-info">
+              <div className="stat-value">
+                {selectedGenre === 'All'
+                  ? movies.filter(movie => movie.trending).length
+                  : movies.filter(movie => movie.trending && movie.category === selectedGenre).length}
+              </div>
+              <div className="stat-label">
+                {selectedGenre === 'All' ? 'Trending' : `${selectedGenre} Trending`}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

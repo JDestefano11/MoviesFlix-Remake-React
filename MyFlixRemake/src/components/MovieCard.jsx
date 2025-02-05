@@ -93,7 +93,7 @@ const MovieCard = ({ movie, isFeatured = false, allMovies }) => {
                 </div>
                 {movie.awards && (
                   <div className="awards-tag">
-                    <FaTrophy /> {movie.awards}
+                    <FaTrophy style={{ marginRight: '4px' }} /> {movie.awards}
                   </div>
                 )}
               </>
