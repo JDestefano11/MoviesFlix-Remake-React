@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MovieCard from '../components/MovieCard';
+import { useFavorites } from '../context/FavoritesContext';
 import '../styles/Profile.css';
 
 const Profile = () => {
@@ -10,7 +11,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [favorites, setFavorites] = useState([]);
+  const { favorites, toggleFavorite, isFavorite } = useFavorites();
   const [userData, setUserData] = useState({
     username: localStorage.getItem('username') || 'User',
     currentPassword: '',
@@ -18,31 +19,12 @@ const Profile = () => {
     confirmPassword: ''
   });
 
-  useEffect(() => {
-    // Load favorites from localStorage
-    const storedFavorites = localStorage.getItem('favorites');
-    if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
-    }
-
-    // Listen for changes in favorites from other components
-    const handleStorageChange = (e) => {
-      if (e.key === 'favorites') {
-        setFavorites(JSON.parse(e.newValue || '[]'));
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData(prev => ({
       ...prev,
       [name]: value
     }));
-    // Clear any previous error messages when user starts typing
     setError('');
   };
 
@@ -53,7 +35,6 @@ const Profile = () => {
     setSuccessMessage('');
 
     try {
-      // Validate inputs
       if (userData.newPassword && userData.newPassword.length < 6) {
         throw new Error('New password must be at least 6 characters long');
       }
@@ -62,13 +43,9 @@ const Profile = () => {
         throw new Error('New passwords do not match');
       }
 
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Update username in localStorage
       localStorage.setItem('username', userData.username);
 
-      // If changing password, update it in localStorage
       if (userData.newPassword) {
         localStorage.setItem('password', userData.newPassword);
       }
@@ -76,7 +53,6 @@ const Profile = () => {
       setSuccessMessage('Profile updated successfully!');
       setIsEditing(false);
       
-      // Reset password fields
       setUserData(prev => ({
         ...prev,
         currentPassword: '',
@@ -94,13 +70,8 @@ const Profile = () => {
   const handleDeleteAccount = async () => {
     setLoading(true);
     try {
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Clear all localStorage data
       localStorage.clear();
-      
-      // Navigate to signup page
       navigate('/signup');
     } catch (err) {
       setError('Failed to delete account. Please try again.');
@@ -109,19 +80,6 @@ const Profile = () => {
     }
   };
 
-  const handleRemoveFavorite = (movieToRemove) => {
-    const updatedFavorites = favorites.filter(movie => movie.id !== movieToRemove.id);
-    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-    setFavorites(updatedFavorites);
-    
-    // Dispatch storage event for other components
-    window.dispatchEvent(new StorageEvent('storage', {
-      key: 'favorites',
-      newValue: JSON.stringify(updatedFavorites)
-    }));
-  };
-
-  // If user is not logged in, redirect to signup
   useEffect(() => {
     const username = localStorage.getItem('username');
     if (!username) {
@@ -200,7 +158,7 @@ const Profile = () => {
                 value={userData.currentPassword}
                 onChange={handleInputChange}
                 disabled={loading}
-                placeholder="Enter your current password"
+                placeholder="Enter current password"
               />
             </div>
 
@@ -213,7 +171,7 @@ const Profile = () => {
                 value={userData.newPassword}
                 onChange={handleInputChange}
                 disabled={loading}
-                placeholder="Enter new password (optional)"
+                placeholder="Enter new password"
               />
             </div>
 
@@ -236,21 +194,7 @@ const Profile = () => {
                 className="save-btn"
                 disabled={loading}
               >
-                {loading ? (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px', animation: 'spin 1s linear infinite' }}>
-                      <line x1="12" y1="2" x2="12" y2="6" />
-                      <line x1="12" y1="18" x2="12" y2="22" />
-                      <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
-                      <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
-                      <line x1="2" y1="12" x2="6" y2="12" />
-                      <line x1="18" y1="12" x2="22" y2="12" />
-                      <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
-                      <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
-                    </svg>
-                    Saving Changes...
-                  </>
-                ) : 'Save Changes'}
+                {loading ? 'Saving...' : 'Save Changes'}
               </button>
               <button 
                 type="button"
@@ -258,6 +202,12 @@ const Profile = () => {
                 onClick={() => {
                   setIsEditing(false);
                   setError('');
+                  setUserData(prev => ({
+                    ...prev,
+                    currentPassword: '',
+                    newPassword: '',
+                    confirmPassword: ''
+                  }));
                 }}
                 disabled={loading}
               >
@@ -265,20 +215,43 @@ const Profile = () => {
               </button>
             </div>
           </form>
+        </div>
+      ) : (
+        <>
+          <div className="favorites-section">
+            <h2>My Favorite Movies</h2>
+            {favorites.length === 0 ? (
+              <div className="no-favorites">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+                <p>You haven't added any favorites yet.</p>
+                <button onClick={() => navigate('/movies')} className="browse-movies-btn">
+                  Browse Movies
+                </button>
+              </div>
+            ) : (
+              <div className="favorites-grid">
+                {favorites.map(movie => (
+                  <MovieCard
+                    key={movie.id}
+                    movie={movie}
+                    onFavorite={() => toggleFavorite(movie)}
+                    isFavorite={isFavorite(movie.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
 
           <div className="danger-zone">
             <h3>Danger Zone</h3>
-            <p>Once you delete your account, there is no going back. Please be certain.</p>
             {!showDeleteConfirm ? (
               <button 
                 className="delete-account-btn"
                 onClick={() => setShowDeleteConfirm(true)}
                 disabled={loading}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}>
-                  <path d="M3 6h18" />
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                </svg>
                 Delete Account
               </button>
             ) : (
@@ -290,46 +263,20 @@ const Profile = () => {
                     onClick={handleDeleteAccount}
                     disabled={loading}
                   >
-                    {loading ? 'Deleting Account...' : 'Yes, Delete My Account'}
+                    {loading ? 'Deleting...' : 'Yes, Delete My Account'}
                   </button>
                   <button 
                     className="cancel-delete-btn"
                     onClick={() => setShowDeleteConfirm(false)}
                     disabled={loading}
                   >
-                    No, Keep My Account
+                    Cancel
                   </button>
                 </div>
               </div>
             )}
           </div>
-        </div>
-      ) : (
-        <div className="profile-content">
-          <section className="favorites-section">
-            <h2>My Favorite Movies</h2>
-            {favorites.length === 0 ? (
-              <div className="no-favorites">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                </svg>
-                <p>No favorite movies yet</p>
-                <p className="subtitle">Start exploring and add movies to your favorites!</p>
-              </div>
-            ) : (
-              <div className="favorites-grid">
-                {favorites.map(movie => (
-                  <MovieCard
-                    key={movie.id}
-                    movie={movie}
-                    isFavorite={true}
-                    onFavorite={() => handleRemoveFavorite(movie)}
-                  />
-                ))}
-              </div>
-            )}
-          </section>
-        </div>
+        </>
       )}
     </div>
   );

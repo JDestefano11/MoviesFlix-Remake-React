@@ -13,15 +13,16 @@
 }
 
 .movies-container {
+  padding: 20px;
+  max-width: 1800px;
+  margin: 0 auto;
   min-height: calc(100vh - 60px);
-  padding: 80px 20px;
   background: linear-gradient(
     135deg,
     var(--primary-bg) 0%,
     var(--secondary-bg) 100%
   );
   color: var(--text-primary);
-  margin-top: 60px;
 }
 
 .search-section {
@@ -163,8 +164,8 @@
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
   padding: 20px;
   margin-top: 20px;
 }
@@ -224,45 +225,31 @@
   font-weight: 500;
 }
 
-@media (max-width: 768px) {
-  .search-section {
-    flex-direction: column;
-    gap: 15px;
-    padding: 0;
+@media (max-width: 1400px) {
+  .movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
   }
-  
-  .view-controls {
-    justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .movies-container {
+    padding: 10px;
   }
 
   .movies-grid {
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
     padding: 15px;
   }
 
-  .filter-section {
-    margin-top: 15px;
+  .search-section {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
   }
 
-  .genre-filters {
+  .filter-buttons {
     justify-content: center;
-    gap: 6px;
-  }
-
-  .genre-button {
-    padding: 4px 10px;
-    font-size: 0.8rem;
-  }
-
-  .featured-timer {
-    padding: 4px 10px;
-  }
-
-  .featured-timer svg {
-    font-size: 0.85rem;
-  }
-
-  .featured-timer span {
-    font-size: 0.75rem;
   }
 }
