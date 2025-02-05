@@ -41,11 +41,28 @@ export default function Signup() {
 
     const birthDate = new Date(formData.birthday);
     const today = new Date();
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    
+    // Check if the birthday is a valid date
+    if (isNaN(birthDate.getTime())) {
+      setError('Please enter a valid birth date');
+      return false;
+    }
+
+    // Check if the birthday is not in the future
+    if (birthDate > today) {
+      setError('Birth date cannot be in the future');
+      return false;
+    }
+
+    // Calculate age more precisely
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    
+    // Adjust age if birthday hasn't occurred this year
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
+
     if (age < 13) {
       setError('You must be at least 13 years old to register');
       return false;

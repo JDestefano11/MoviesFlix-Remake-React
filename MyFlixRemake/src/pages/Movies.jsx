@@ -461,7 +461,7 @@ const Movies = () => {
     return localStorage.getItem('viewMode') || 'grid';
   });
   const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem('movieFavorites');
+    const saved = localStorage.getItem('favoriteMovies');
     return saved ? JSON.parse(saved) : [];
   });
   const [searchFocused, setSearchFocused] = useState(false);
@@ -536,14 +536,21 @@ const Movies = () => {
     localStorage.setItem('featuredMovieTimestamp', new Date().getTime().toString());
   };
 
-  const handleFavorite = (movieId) => {
+  const handleFavorite = (movie) => {
     setFavorites(prev => {
-      const newFavorites = prev.includes(movieId)
-        ? prev.filter(id => id !== movieId)
-        : [...prev, movieId];
+      const movieExists = prev.some(fav => fav.id === movie.id);
+      let newFavorites;
       
-      // Save to localStorage immediately
-      localStorage.setItem('movieFavorites', JSON.stringify(newFavorites));
+      if (movieExists) {
+        // Remove from favorites
+        newFavorites = prev.filter(fav => fav.id !== movie.id);
+      } else {
+        // Add to favorites
+        newFavorites = [...prev, movie];
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('favoriteMovies', JSON.stringify(newFavorites));
       return newFavorites;
     });
   };
@@ -641,8 +648,8 @@ const Movies = () => {
           <MovieCard 
             movie={featuredMovie}
             isFeatured={true}
-            onFavorite={handleFavorite}
-            isFavorite={favorites.includes(featuredMovie.id)}
+            onFavorite={() => handleFavorite(featuredMovie)}
+            isFavorite={favorites.some(fav => fav.id === featuredMovie.id)}
           />
         </div>
       )}
@@ -654,8 +661,8 @@ const Movies = () => {
             <MovieCard
               key={movie.id}
               movie={movie}
-              onFavorite={handleFavorite}
-              isFavorite={favorites.includes(movie.id)}
+              onFavorite={() => handleFavorite(movie)}
+              isFavorite={favorites.some(fav => fav.id === movie.id)}
             />
           ))}
       </div>
