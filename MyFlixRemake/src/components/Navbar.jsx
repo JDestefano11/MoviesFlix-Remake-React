@@ -1,128 +1,94 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { FaBars, FaTimes, FaUser } from 'react-icons/fa';
 import '../styles/Navbar.css';
 
-const Navbar = ({ isLoggedIn, onLogout }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Close mobile menu when route changes
   useEffect(() => {
-    return () => setIsMobileMenuOpen(false);
-  }, [navigate]);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
 
-  // Prevent scroll when mobile menu is open
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
-    if (isMobileMenuOpen) {
+    if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isMobileMenuOpen]);
+  }, [isOpen]);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
 
-  const handleLogout = () => {
-    onLogout();
-    setIsMobileMenuOpen(false);
-    navigate('/');
-  };
-
-  const handleLinkClick = () => {
-    setIsMobileMenuOpen(false);
+  const closeMenu = () => {
+    setIsOpen(false);
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-brand">
-        <Link to="/" onClick={handleLinkClick}>
-          <h1>MyFlix</h1>
-        </Link>
-      </div>
-
-      <div className="nav-center desktop-only">
-        <Link to="/" className="nav-center-link" onClick={handleLinkClick}>
-          Home
-        </Link>
-        {isLoggedIn && (
-          <>
-            <Link to="/movies" className="nav-center-link" onClick={handleLinkClick}>
-              Movies
-            </Link>
-            <Link to="/profile" className="nav-center-link" onClick={handleLinkClick}>
-              Profile
-            </Link>
-          </>
-        )}
-      </div>
-
-      <div className="auth-buttons desktop-only">
-        {!isLoggedIn ? (
-          <>
-            <Link to="/login" className="btn btn-login" onClick={handleLinkClick}>
-              Login
-            </Link>
-            <Link to="/signup" className="btn btn-signup" onClick={handleLinkClick}>
-              Sign Up
-            </Link>
-          </>
-        ) : (
-          <button className="btn btn-signup" onClick={handleLogout}>
-            Logout
-          </button>
-        )}
-      </div>
-
-      <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
-        <div className="mobile-nav-links">
-          <Link to="/" className="nav-center-link" onClick={handleLinkClick}>
-            Home
+    <>
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="nav-container">
+          <Link to="/" className="nav-logo" onClick={closeMenu}>
+            MoviesFlix
           </Link>
-          {isLoggedIn && (
-            <>
-              <Link to="/movies" className="nav-center-link" onClick={handleLinkClick}>
-                Movies
+
+          <div className="nav-controls">
+            <button className="hamburger" onClick={toggleMenu} aria-label="Toggle menu">
+              {isOpen ? <FaTimes /> : <FaBars />}
+            </button>
+
+            {/* Desktop Navigation */}
+            <div className="nav-menu desktop">
+              <Link to="/" className="nav-link">Home</Link>
+              <Link to="/movies" className="nav-link">Movies</Link>
+              <Link to="/profile" className="nav-link">
+                <FaUser /> Profile
               </Link>
-              <Link to="/profile" className="nav-center-link" onClick={handleLinkClick}>
-                Profile
-              </Link>
-            </>
-          )}
+              <div className="auth-buttons">
+                <Link to="/login" className="auth-button login">Login</Link>
+                <Link to="/signup" className="auth-button signup">Sign Up</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Navigation Overlay */}
+      <div className={`mobile-menu-overlay ${isOpen ? 'active' : ''}`} onClick={closeMenu}></div>
+
+      {/* Mobile Navigation Menu */}
+      <div className={`mobile-menu ${isOpen ? 'active' : ''}`}>
+        <div className="mobile-menu-header">
+          <Link to="/" className="nav-logo" onClick={closeMenu}>
+            MoviesFlix
+          </Link>
+          <button className="close-button" onClick={closeMenu}>
+            <FaTimes />
+          </button>
+        </div>
+
+        <div className="mobile-nav-links">
+          <Link to="/" className="mobile-nav-link" onClick={closeMenu}>Home</Link>
+          <Link to="/movies" className="mobile-nav-link" onClick={closeMenu}>Movies</Link>
+          <Link to="/profile" className="mobile-nav-link" onClick={closeMenu}>
+            <FaUser /> Profile
+          </Link>
         </div>
 
         <div className="mobile-auth-buttons">
-          {!isLoggedIn ? (
-            <>
-              <Link to="/login" className="btn btn-login" onClick={handleLinkClick}>
-                Login
-              </Link>
-              <Link to="/signup" className="btn btn-signup" onClick={handleLinkClick}>
-                Sign Up
-              </Link>
-            </>
-          ) : (
-            <button className="btn btn-signup" onClick={handleLogout}>
-              Logout
-            </button>
-          )}
+          <Link to="/login" className="auth-button login" onClick={closeMenu}>Login</Link>
+          <Link to="/signup" className="auth-button signup" onClick={closeMenu}>Sign Up</Link>
         </div>
       </div>
-
-      <button 
-        className={`mobile-menu-button ${isMobileMenuOpen ? 'active' : ''}`}
-        onClick={toggleMobileMenu}
-        aria-label="Toggle navigation menu"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </nav>
+    </>
   );
 };
 
