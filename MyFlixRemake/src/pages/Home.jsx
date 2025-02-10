@@ -33,9 +33,18 @@ const Home = () => {
 
   return (
     <div className="home">
-      {/* Background Elements */}
-      <div className="animated-bg"></div>
+      {/* Insane Background */}
+      <div className="animated-bg">
+        {/* Glowing spheres */}
+        <div className="gradient-sphere sphere-1"></div>
+        <div className="gradient-sphere sphere-2"></div>
+        <div className="gradient-sphere sphere-3"></div>
+      </div>
+      
+      {/* Animated gradient overlay */}
       <div className="gradient-overlay"></div>
+      
+      {/* Noise texture */}
       <div className="noise-overlay"></div>
       
       <Navbar />
