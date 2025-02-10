@@ -358,34 +358,38 @@ const Movies = () => {
   return (
     <div className="movies-container">
       <div className="search-section">
-        <div className={`search-container ${searchFocused ? 'focused' : ''}`}>
-          <FaSearch className="search-icon" />
-          <input
-            type="text"
-            placeholder="Search movies by title, description, or category..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setSearchFocused(false)}
-            className="search-input"
-          />
-        </div>
-        <div className="view-controls">
-          <button 
-            className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
-            onClick={() => setViewMode('grid')}
-          >
-            <FaTh />
-          </button>
-          <button 
-            className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
-            onClick={() => setViewMode('list')}
-          >
-            <FaList />
-          </button>
+        <div className="search-controls">
+          <div className="search-bar">
+            <FaSearch className="search-icon" />
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search movies by title, description, or category..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setSearchFocused(false)}
+            />
+          </div>
+          <div className="view-controls">
+            <button 
+              className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => setViewMode('grid')}
+              title="Grid View"
+            >
+              <FaTh />
+            </button>
+            <button 
+              className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
+              onClick={() => setViewMode('list')}
+              title="List View"
+            >
+              <FaList />
+            </button>
+          </div>
         </div>
       </div>
-        
+
       <div className="filter-section">
         <div className="genre-filters">
           <button
@@ -398,7 +402,15 @@ const Movies = () => {
             <button
               key={genre}
               className={`genre-button ${selectedGenre === genre ? 'active' : ''}`}
-              onClick={() => setSelectedGenre(genre)}
+              onClick={(e) => {
+                // If clicking the X button (right side of active button), reset to All
+                if (selectedGenre === genre && 
+                    e.clientX > e.target.getBoundingClientRect().right - 40) {
+                  setSelectedGenre('All');
+                } else {
+                  setSelectedGenre(genre);
+                }
+              }}
             >
               {genre}
             </button>
@@ -411,18 +423,6 @@ const Movies = () => {
                 Search: {searchTerm}
               </span>
               <button className="filter-tag-close" onClick={() => setSearchTerm('')}>
-                <svg viewBox="0 0 20 20" fill="currentColor" className="close-icon">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </div>
-          )}
-          {selectedGenre !== 'All' && (
-            <div className="filter-tag">
-              <span className="filter-tag-text">
-                Genre: {selectedGenre}
-              </span>
-              <button className="filter-tag-close" onClick={() => setSelectedGenre('All')}>
                 <svg viewBox="0 0 20 20" fill="currentColor" className="close-icon">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
@@ -444,7 +444,7 @@ const Movies = () => {
         </div>
       )}
 
-      <div className={`movies-grid ${viewMode === 'list' ? 'list-view' : ''}`}>
+      <div className={`movies-grid ${viewMode}`}>
         {filteredMovies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} allMovies={movies} />
         ))}
@@ -459,53 +459,26 @@ const Movies = () => {
         />
       )}
 
-      <div className="stats-section">
+      <div className="stats-footer">
         <div className="stats-content">
-          <div className="stat-item">
-            <div className="stat-icon">
+          <div className="stats-group">
+            <div className="stat-item">
               <FaFilm />
+              <span>Total Movies: <span className="stat-value">{movies.length}</span></span>
             </div>
-            <div className="stat-info">
-              <div className="stat-value">
-                {selectedGenre === 'All' 
-                  ? movies.length 
-                  : movies.filter(movie => movie.category === selectedGenre).length}
-              </div>
-              <div className="stat-label">
-                {selectedGenre === 'All' ? 'Total Movies' : `${selectedGenre} Movies`}
-              </div>
-            </div>
-          </div>
-
-          <div className="stat-item">
-            <div className="stat-icon heart">
+            <div className="stat-item">
               <FaHeart />
-            </div>
-            <div className="stat-info">
-              <div className="stat-value">
-                {selectedGenre === 'All'
-                  ? favorites.length
-                  : favorites.filter(movie => movie.category === selectedGenre).length}
-              </div>
-              <div className="stat-label">
-                {selectedGenre === 'All' ? 'Favorites' : `${selectedGenre} Favorites`}
-              </div>
+              <span>Favorites: <span className="stat-value">{favorites.length}</span></span>
             </div>
           </div>
-
-          <div className="stat-item">
-            <div className="stat-icon trending">
+          <div className="stats-group">
+            <div className="stat-item">
               <FaFire />
+              <span>Trending: <span className="stat-value">{movies.filter(m => m.trending).length}</span></span>
             </div>
-            <div className="stat-info">
-              <div className="stat-value">
-                {selectedGenre === 'All'
-                  ? movies.filter(movie => movie.trending).length
-                  : movies.filter(movie => movie.trending && movie.category === selectedGenre).length}
-              </div>
-              <div className="stat-label">
-                {selectedGenre === 'All' ? 'Trending' : `${selectedGenre} Trending`}
-              </div>
+            <div className="stat-item">
+              <FaClock />
+              <span>Featured Refresh: <span className="stat-value">{timeRemaining}</span></span>
             </div>
           </div>
         </div>
