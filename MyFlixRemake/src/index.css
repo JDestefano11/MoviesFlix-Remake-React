@@ -7,6 +7,9 @@
   --text-primary: #F8FAFC;
   --text-secondary: #94A3B8;
   --surface: rgba(30, 41, 59, 0.7);
+  --primary-bg: #0f172a;
+  --primary-red: #ff416c;
+  --primary-blue: #3b82f6;
 }
 
 * {
@@ -21,10 +24,31 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--bg-darker);
-  color: var(--text-primary);
+  background: var(--primary-bg);
+  color: #ffffff;
   min-height: 100vh;
+  position: relative;
   overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: 
+    linear-gradient(217deg, rgba(255,0,0,.1), transparent 70%),
+    linear-gradient(127deg, rgba(37,99,235,.08), transparent 70%),
+    linear-gradient(336deg, rgba(59,130,246,.1), transparent 70%);
+  pointer-events: none;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
 }
 
 /* Static modern background */
@@ -121,6 +145,11 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+input,
+textarea {
+  font-family: inherit;
 }
 
 @media (prefers-color-scheme: light) {
