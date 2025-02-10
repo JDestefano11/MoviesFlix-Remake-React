@@ -1,150 +1,191 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import '../styles/Auth.css';
+import { FaDragon,  FaEye, FaEyeSlash, FaPlay, FaSearch } from 'react-icons/fa';
+import { BiMoviePlay } from 'react-icons/bi';
+import { MdLocalMovies, MdMovie } from 'react-icons/md';
+import '../styles/Login.css';
 
 const Login = ({ setIsLoggedIn }) => {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: ''
-  });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    setError('');
-  };
-
-  // Temporary dev credentials
-  const DEV_CREDENTIALS = {
-    username: 'demo',
-    password: 'movieflix2024'
-  };
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    setIsLoading(true);
 
-    try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      // Development mode: check against temporary credentials
-      if (formData.username === DEV_CREDENTIALS.username && 
-          formData.password === DEV_CREDENTIALS.password) {
-        localStorage.setItem('token', 'dev-token-12345');
-        localStorage.setItem('username', formData.username);
+    // Simulating API call
+    setTimeout(() => {
+      if (email === 'demo@example.com' && password === 'password') {
         setIsLoggedIn(true);
-        navigate('/movies');
-        return;
+        navigate('/');
+      } else {
+        setError('Invalid credentials. Please try again.');
       }
-
-      // Show error for invalid credentials
-      setError('Invalid username or password');
-    } catch (error) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+      setIsLoading(false);
+    }, 1500);
   };
 
-  const fillDemoCredentials = () => {
-    setFormData({
-      username: DEV_CREDENTIALS.username,
-      password: DEV_CREDENTIALS.password
-    });
+  const handleDemoLogin = (e) => {
+    e.preventDefault();
+    setEmail('demo@example.com');
+    setPassword('password');
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-logo">
-          <h1>MoviesFlix</h1>
-        </div>
-        <div className="auth-header">
-          <h2>Welcome Back</h2>
-          <p className="auth-subtitle">Sign in to continue your journey</p>
-        </div>
-
-        <div className="demo-credentials">
-          <h3>Demo Account</h3>
-          <p>Username: <span>{DEV_CREDENTIALS.username}</span></p>
-          <p>Password: <span>{DEV_CREDENTIALS.password}</span></p>
-          <button 
-            type="button" 
-            className="fill-demo-btn"
-            onClick={fillDemoCredentials}
-          >
-            Fill Demo Credentials
-          </button>
-        </div>
-
-        {error && (
-          <div className="error-message">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="8" x2="12" y2="12" />
-              <line x1="12" y1="16" x2="12" y2="16" />
-            </svg>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              id="username"
-              type="text"
-              name="username"
-              placeholder="Enter your username"
-              value={formData.username}
-              onChange={handleChange}
-              disabled={loading}
-              autoComplete="username"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              disabled={loading}
-              autoComplete="current-password"
-            />
+    <div className="login-page">
+      <div className="animated-background">
+        <div className="gradient-sphere sphere-1"></div>
+        <div className="gradient-sphere sphere-2"></div>
+        <div className="gradient-sphere sphere-3"></div>
+      </div>
+      
+      <div className="login-container">
+        <div className="login-content">
+          <div className="brand-section">
+            <Link to="/" className="brand-logo">
+              <FaDragon className="logo-icon main" />
+              <FaPlay className="logo-icon play" />
+              <span className="brand-text">DRAGON<span className="brand-highlight">FLIX</span></span>
+            </Link>
+            <h1 className="welcome-text">Welcome Back</h1>
+            <p className="subtitle">Continue your entertainment journey</p>
           </div>
 
-          <button 
-            type="submit" 
-            className={`submit-button ${loading ? 'loading' : ''}`}
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="loading-spinner"></span>
-            ) : (
-              'Sign In'
-            )}
-          </button>
-        </form>
+          <form onSubmit={handleSubmit} className="login-form">
+            {error && <div className="error-message">{error}</div>}
+            
+            <div className="form-group">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="form-input"
+                required
+              />
+            </div>
 
-        <div className="auth-footer">
-          <p>Don't have an account?</p>
-          <Link to="/signup" className="signup-link">
-            Create Account
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </Link>
+            <div className="form-group">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="form-input"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="password-toggle"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+
+            <div className="form-footer">
+              <label className="remember-me">
+                <input type="checkbox" />
+                <span>Remember me</span>
+              </label>
+              <Link to="/forgot-password" className="forgot-password">
+                Forgot Password?
+              </Link>
+            </div>
+
+            <button type="submit" className="login-button" disabled={isLoading}>
+              {isLoading ? (
+                <div className="loading-spinner"></div>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+
+            <div className="divider">
+              <span>or</span>
+            </div>
+
+            <button type="button" className="demo-button" onClick={handleDemoLogin}>
+              Try Demo Account
+            </button>
+          </form>
+
+          <div className="signup-prompt">
+            <span>Don't have an account?</span>
+            <Link to="/signup" className="signup-link">
+              Sign up now
+            </Link>
+          </div>
+        </div>
+
+        <div className="login-feature">
+          <div className="animated-bg">
+            <div className="bg-shape shape1"></div>
+            <div className="bg-shape shape2"></div>
+            <div className="bg-shape shape3"></div>
+          </div>
+          <div className="feature-content">
+            <div className="feature-header">
+              <h2>Welcome to DragonFlix</h2>
+              <p>Your Ultimate Movie Discovery Platform</p>
+            </div>
+            
+            <div className="feature-showcase">
+              <div className="showcase-item">
+                <div className="showcase-visual">
+                  <div className="preview-screen">
+                    <div className="preview-content">
+                      <div className="preview-play">
+                        <FaPlay className="play-icon" />
+                      </div>
+                      <div className="preview-info">
+                        <div className="preview-badge">HD</div>
+                        <h3>Watch Trailers</h3>
+                        <p>In High Quality</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="feature-highlights">
+                <div className="highlight-item">
+                  <div className="highlight-icon">
+                    <BiMoviePlay />
+                  </div>
+                  <div className="highlight-text">
+                    <h4>Latest Trailers</h4>
+                    <p>Stay up to date with new releases</p>
+                  </div>
+                </div>
+                
+                <div className="highlight-item">
+                  <div className="highlight-icon">
+                    <MdLocalMovies />
+                  </div>
+                  <div className="highlight-text">
+                    <h4>Movie Details</h4>
+                    <p>Cast, ratings, and reviews</p>
+                  </div>
+                </div>
+                
+                <div className="highlight-item">
+                  <div className="highlight-icon">
+                    <FaSearch />
+                  </div>
+                  <div className="highlight-text">
+                    <h4>Easy Search</h4>
+                    <p>Find any movie instantly</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

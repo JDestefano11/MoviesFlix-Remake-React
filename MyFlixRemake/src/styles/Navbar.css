@@ -4,15 +4,15 @@
   left: 0;
   width: 100%;
   height: 4rem;
-  background: rgba(17, 24, 39, 0.95);
+  background: rgba(26, 28, 46, 0.95);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255, 65, 108, 0.2);
+  border-bottom: 1px solid rgba(255, 107, 74, 0.2);
   z-index: 1000;
   transition: all 0.3s ease;
 }
 
 .navbar.scrolled {
-  background: rgba(17, 24, 39, 0.98);
+  background: rgba(26, 28, 46, 0.98);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -63,11 +63,11 @@
 
 .logo-wrapper:hover .logo-icon.main {
   transform: scale(1.1) rotate(-5deg);
-  filter: drop-shadow(0 0 10px rgba(255, 65, 108, 0.5));
+  filter: drop-shadow(0 0 10px rgba(255, 107, 74, 0.5));
 }
 
 .logo-wrapper:hover .logo-text {
-  text-shadow: 0 0 20px rgba(255, 65, 108, 0.5);
+  text-shadow: 0 0 20px rgba(255, 107, 74, 0.5);
   letter-spacing: 3px;
 }
 
@@ -77,18 +77,18 @@
 
 .logo-icon.main {
   font-size: 2rem;
-  color: #ff416c;
-  filter: drop-shadow(0 0 5px rgba(255, 65, 108, 0.3));
+  color: #ff6b4a;
+  filter: drop-shadow(0 0 5px rgba(255, 107, 74, 0.3));
 }
 
 .logo-icon.play {
-  color: #ff4b2b;
+  color: #ff8f3d;
   font-size: 0.9rem;
   position: absolute;
   left: 1.75rem;
   top: 1.25rem;
   transform: rotate(-10deg);
-  filter: drop-shadow(0 0 3px rgba(255, 75, 43, 0.5));
+  filter: drop-shadow(0 0 3px rgba(255, 140, 61, 0.5));
 }
 
 .logo-text {
@@ -97,7 +97,7 @@
   letter-spacing: 2px;
   text-transform: uppercase;
   transition: all 0.3s ease;
-  text-shadow: 0 0 10px rgba(255, 65, 108, 0.3);
+  text-shadow: 0 0 10px rgba(255, 107, 74, 0.3);
   background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -105,11 +105,11 @@
 }
 
 .logo-highlight {
-  background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+  background: linear-gradient(135deg, #ff6b4a 0%, #ff8f3d 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 2px rgba(255, 65, 108, 0.3));
+  filter: drop-shadow(0 0 2px rgba(255, 107, 74, 0.3));
 }
 
 .nav-menu.desktop {
@@ -137,9 +137,9 @@
 }
 
 .nav-link:hover {
-  color: #ff416c;
+  color: #ff6b4a;
   transform: translateY(-1px);
-  background: rgba(255, 65, 108, 0.1);
+  background: rgba(255, 107, 74, 0.1);
 }
 
 .nav-controls {
@@ -187,7 +187,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(255, 65, 108, 0.2), rgba(255, 75, 43, 0.2));
+  background: linear-gradient(135deg, rgba(255, 107, 74, 0.2), rgba(255, 140, 61, 0.2));
   transform: translateX(-100%);
   transition: transform 0.3s ease;
 }
@@ -197,24 +197,24 @@
 }
 
 .auth-button.login {
-  color: #ff416c;
-  border: 1px solid rgba(255, 65, 108, 0.3);
+  color: #ff6b4a;
+  border: 1px solid rgba(255, 107, 74, 0.3);
 }
 
 .auth-button.login:hover {
-  background: rgba(255, 65, 108, 0.1);
-  border-color: rgba(255, 65, 108, 0.5);
+  background: rgba(255, 107, 74, 0.1);
+  border-color: rgba(255, 107, 74, 0.5);
   transform: translateY(-1px);
 }
 
 .auth-button.signup {
-  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  background: linear-gradient(135deg, #ff6b4a, #ff8f3d);
   color: white;
 }
 
 .auth-button.signup:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 65, 108, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 107, 74, 0.3);
 }
 
 .mobile-menu-button {
@@ -265,7 +265,7 @@
   right: 0;
   width: 100%;
   height: 100vh;
-  background: rgb(17, 24, 39);
+  background: rgba(26, 28, 46, 0.98);
   padding: 2rem;
   transition: all 0.3s ease;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
@@ -310,8 +310,8 @@
 }
 
 .mobile-nav-link:hover {
-  background: rgba(255, 65, 108, 0.1);
-  color: #ff416c;
+  background: rgba(255, 107, 74, 0.1);
+  color: #ff6b4a;
 }
 
 .mobile-auth-buttons {
@@ -330,16 +330,16 @@
 }
 
 .mobile-auth-buttons .auth-button.login {
-  background: rgba(255, 65, 108, 0.2);
+  background: rgba(255, 107, 74, 0.2);
 }
 
 .mobile-auth-buttons .auth-button.signup {
-  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  background: linear-gradient(135deg, #ff6b4a, #ff8f3d);
   color: white;
 }
 
 .mobile-auth-buttons .auth-button:hover {
-  background: rgba(255, 65, 108, 0.3);
+  background: rgba(255, 107, 74, 0.3);
 }
 
 @media (max-width: 768px) {
