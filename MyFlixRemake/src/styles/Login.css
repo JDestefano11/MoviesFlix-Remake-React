@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5rem 1rem 1rem;
+  padding: 9rem 2rem 2rem;
   overflow: hidden;
 }
 
@@ -85,6 +85,7 @@
   max-width: 1200px;
   min-height: 580px;
   max-height: 700px;
+  margin-bottom: 4rem;
   background: rgba(26, 28, 46, 0.7);
   backdrop-filter: blur(20px);
   border-radius: 20px;
@@ -571,79 +572,62 @@
 @media (max-width: 1024px) {
   .login-container {
     grid-template-columns: 1fr;
-    max-width: 500px;
-    min-height: 0;
-    max-height: none;
   }
-
-  .login-feature {
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1.5rem;
-  }
-
-  .feature-highlights {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-    padding: 0;
-  }
-
-  .highlight-item {
-    padding: 0.75rem;
-  }
-
-  .highlight-icon {
-    font-size: 1.25rem;
-  }
-
-  .preview-screen {
-    max-width: 320px;
-    margin: 0 auto;
+  
+  .login-image {
+    display: none;
   }
 }
 
-@media (max-width: 640px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .login-page {
-    padding: 4.5rem 0.75rem 0.75rem;
+    padding: 9rem 2rem 2rem;
+  }
+  
+  .login-container {
+    max-width: 500px;
+    width: 100%;
+  }
+}
+
+@media (min-width: 467px) and (max-width: 767px) {
+  .login-page {
+    padding-top: 11rem !important;
+    padding-bottom: 2rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    min-height: calc(100vh - 60px);
+  }
+  
+  .login-container {
+    margin-bottom: 2rem;
+    max-width: 500px;
+    width: 100%;
   }
 
   .login-content {
-    padding: 1.5rem;
+    padding: 2rem;
   }
 
-  .feature-highlights {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-  }
-
-  .highlight-item {
-    padding: 0.5rem;
-  }
-
-  .preview-screen {
-    max-width: 280px;
-  }
-
-  .preview-play {
-    width: 48px;
-    height: 48px;
-  }
-
-  .play-icon {
-    font-size: 1.25rem;
+  .login-header {
+    margin-bottom: 2rem;
   }
 }
 
 @media (max-width: 480px) {
   .login-page {
-    padding: 4rem 0.5rem 0.5rem;
+    padding: 9rem 1rem 1rem;
+    min-height: calc(100vh - 60px);
   }
 
   .login-container {
-    border-radius: 12px;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    width: 100%;
+    min-height: auto;
   }
 
-  .movie-grid {
-    padding: 0.25rem;
+  .login-content {
+    padding: 1.5rem;
   }
 }
