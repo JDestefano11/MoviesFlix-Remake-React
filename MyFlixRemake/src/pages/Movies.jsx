@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import MovieCard from '../components/MovieCard';
 import MovieDetailsModal from '../components/MovieDetailsModal';
 import { FaSearch, FaTh, FaList, FaFilter, FaClock, FaFilm, FaHeart, FaFire } from 'react-icons/fa';
+import { BsGrid, BsList } from 'react-icons/bs';
 import { useFavorites } from '../context/FavoritesContext';
 import '../styles/Movies.css';
 
@@ -261,6 +262,27 @@ const Movies = () => {
   const [timeRemaining, setTimeRemaining] = useState('');
   const [selectedMovie, setSelectedMovie] = useState(null);
 
+  const ViewControls = () => {
+    return (
+      <div className="view-controls">
+        <button
+          className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
+          onClick={() => setViewMode('grid')}
+          aria-label="Grid View"
+        >
+          <BsGrid />
+        </button>
+        <button
+          className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
+          onClick={() => setViewMode('list')}
+          aria-label="List View"
+        >
+          <BsList />
+        </button>
+      </div>
+    );
+  };
+
   // Initialize featured movie on mount
   useEffect(() => {
     initializeFeaturedMovie();
@@ -371,22 +393,7 @@ const Movies = () => {
               onBlur={() => setSearchFocused(false)}
             />
           </div>
-          <div className="view-controls">
-            <button 
-              className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
-              onClick={() => setViewMode('grid')}
-              title="Grid View"
-            >
-              <FaTh />
-            </button>
-            <button 
-              className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
-              onClick={() => setViewMode('list')}
-              title="List View"
-            >
-              <FaList />
-            </button>
-          </div>
+          <ViewControls />
         </div>
       </div>
 
