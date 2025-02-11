@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import MovieCard from '../components/MovieCard';
 import MovieDetailsModal from '../components/MovieDetailsModal';
-import { FaSearch, FaTh, FaList, FaFilter, FaClock, FaFilm, FaHeart, FaFire } from 'react-icons/fa';
+import { FaSearch, FaTh, FaList, FaFilter, FaClock, FaFilm, FaHeart, FaFire, FaTimes } from 'react-icons/fa';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useFavorites } from '../context/FavoritesContext';
 import '../styles/Movies.css';
@@ -261,6 +261,13 @@ const Movies = () => {
   const [featuredMovie, setFeaturedMovie] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState('');
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [customSearchOpen, setCustomSearchOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [minRating, setMinRating] = useState(0);
+  const [yearFrom, setYearFrom] = useState('');
+  const [yearTo, setYearTo] = useState('');
+  const [activeFilters, setActiveFilters] = useState([]);
 
   const ViewControls = () => {
     return (
@@ -362,9 +369,12 @@ const Movies = () => {
                          movie.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          movie.category.toLowerCase().includes(searchTerm.toLowerCase());
       const genreMatch = selectedGenre === 'All' || movie.category === selectedGenre;
-      return searchMatch && genreMatch;
+      const customGenreMatch = selectedGenres.length === 0 || selectedGenres.includes(movie.category);
+      const ratingMatch = movie.rating >= minRating;
+      const yearMatch = (yearFrom === '' || movie.year >= yearFrom) && (yearTo === '' || movie.year <= yearTo);
+      return searchMatch && genreMatch && customGenreMatch && ratingMatch && yearMatch;
     }),
-    [movies, searchTerm, selectedGenre]
+    [movies, searchTerm, selectedGenre, selectedGenres, minRating, yearFrom, yearTo]
   );
 
   // Add event listener for opening movie modals
@@ -377,6 +387,155 @@ const Movies = () => {
     return () => window.removeEventListener('openMovieModal', handleOpenMovieModal);
   }, []);
 
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter' || e.type === 'click') {
+      setSearchFocused(false);
+      setCustomSearchOpen(false);
+    }
+  };
+
+  const handleGenreSelect = (genre) => {
+    if (selectedGenres.includes(genre)) {
+      setSelectedGenres(selectedGenres.filter(g => g !== genre));
+      handleRemoveFilter('genre', genre);
+    } else {
+      setSelectedGenres([...selectedGenres, genre]);
+      handleAddFilter('Genre', genre);
+    }
+  };
+
+  const handleRatingChange = (value) => {
+    setMinRating(value);
+    handleAddFilter('Rating', `${value}+ Stars`);
+  };
+
+  const handleYearChange = () => {
+    if (yearFrom || yearTo) {
+      handleAddFilter('Year', `${yearFrom || 'Any'} - ${yearTo || 'Now'}`);
+    }
+  };
+
+  const handleApplyFilters = () => {
+    setCustomSearchOpen(false);
+  };
+
+  const handleResetFilters = () => {
+    setSelectedGenres([]);
+    setMinRating(0);
+    setYearFrom('');
+    setYearTo('');
+    setActiveFilters([]);
+    setCustomSearchOpen(false);
+  };
+
+  const handleAddFilter = (type, value) => {
+    const newFilter = { id: Date.now(), type, value };
+    setActiveFilters([...activeFilters, newFilter]);
+  };
+
+  const handleRemoveFilter = (filterId) => {
+    setActiveFilters(activeFilters.filter(filter => filter.id !== filterId));
+  };
+
+  const ActiveFilterTags = () => {
+    return (
+      <div className="active-filters">
+        {activeFilters.map(filter => (
+          <div key={filter.id} className="filter-tag">
+            <span className="filter-type">{filter.type}:</span>
+            <span className="filter-value">{filter.value}</span>
+            <button 
+              className="filter-remove" 
+              onClick={() => handleRemoveFilter(filter.id)}
+            >
+              <FaTimes />
+            </button>
+          </div>
+        ))}
+        {activeFilters.length > 0 && (
+          <button 
+            className="clear-filters"
+            onClick={() => setActiveFilters([])}
+          >
+            Clear All
+          </button>
+        )}
+      </div>
+    );
+  };
+
+  const CustomSearchFilter = () => {
+    return (
+      <div className={`custom-search-filter ${customSearchOpen ? 'open' : ''}`}>
+        <div className="filter-header">
+          <h3>Advanced Search</h3>
+          <button onClick={() => setCustomSearchOpen(false)} className="close-button">
+            <FaTimes />
+          </button>
+        </div>
+        
+        <div className="filter-section">
+          <label>Genre</label>
+          <div className="genre-buttons">
+            {GENRES.map(genre => (
+              <button
+                key={genre}
+                className={`genre-filter-btn ${selectedGenres.includes(genre) ? 'active' : ''}`}
+                onClick={() => handleGenreSelect(genre)}
+              >
+                {genre}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="filter-section">
+          <label>Rating</label>
+          <div className="rating-range">
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step="0.5"
+              value={minRating}
+              onChange={(e) => handleRatingChange(parseFloat(e.target.value))}
+            />
+            <span>{minRating}+ Stars</span>
+          </div>
+        </div>
+
+        <div className="filter-section">
+          <label>Year</label>
+          <div className="year-range">
+            <input
+              type="number"
+              placeholder="From"
+              value={yearFrom}
+              onChange={(e) => setYearFrom(e.target.value)}
+            />
+            <span>-</span>
+            <input
+              type="number"
+              placeholder="To"
+              value={yearTo}
+              onChange={(e) => setYearTo(e.target.value)}
+            />
+          </div>
+          <button onClick={handleYearChange}>Apply</button>
+        </div>
+
+        <div className="filter-actions">
+          <button className="apply-filters" onClick={handleApplyFilters}>
+            Apply Filters
+          </button>
+          <button className="reset-filters" onClick={handleResetFilters}>
+            Reset
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="movies-container">
       <div className="search-section">
@@ -386,16 +545,32 @@ const Movies = () => {
             <input
               type="text"
               className="search-input"
-              placeholder="Search movies by title, description, or category..."
+              placeholder="Search movies..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
+              onFocus={() => setCustomSearchOpen(true)}
             />
           </div>
-          <ViewControls />
+          <div className="view-controls">
+            <button
+              className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => setViewMode('grid')}
+              aria-label="Grid View"
+            >
+              <BsGrid />
+            </button>
+            <button
+              className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
+              onClick={() => setViewMode('list')}
+              aria-label="List View"
+            >
+              <BsList />
+            </button>
+          </div>
         </div>
       </div>
+
+      <CustomSearchFilter />
 
       <div className="filter-section">
         <div className="genre-filters">
@@ -423,20 +598,7 @@ const Movies = () => {
             </button>
           ))}
         </div>
-        <div className="active-filters">
-          {searchTerm && (
-            <div className="filter-tag">
-              <span className="filter-tag-text">
-                Search: {searchTerm}
-              </span>
-              <button className="filter-tag-close" onClick={() => setSearchTerm('')}>
-                <svg viewBox="0 0 20 20" fill="currentColor" className="close-icon">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </div>
-          )}
-        </div>
+        <ActiveFilterTags />
       </div>
 
       {featuredMovie && !searchTerm && selectedGenre === 'All' && (
