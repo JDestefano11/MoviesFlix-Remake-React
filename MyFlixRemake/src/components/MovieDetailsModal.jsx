@@ -6,6 +6,13 @@ import '../styles/MovieDetailsModal.css';
 const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const [similarMovies, setSimilarMovies] = useState([]);
+  const [isFavorited, setIsFavorited] = useState(false);
+
+  useEffect(() => {
+    if (movie) {
+      setIsFavorited(isFavorite(movie.id));
+    }
+  }, [movie, isFavorite]);
 
   useEffect(() => {
     if (movie && isOpen && allMovies) {
@@ -24,6 +31,7 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
 
   const handleFavoriteClick = () => {
     toggleFavorite(movie);
+    setIsFavorited(!isFavorited);
   };
 
   const handleSimilarMovieClick = (similarMovie) => {
@@ -62,12 +70,11 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
               <span>{movie.category}</span>
             </div>
             <button 
-              className={`favorite-btn ${isFavorite(movie.id) ? 'active' : ''}`}
+              className={`favorite-btn ${isFavorited ? 'active' : ''}`}
               onClick={handleFavoriteClick}
-              title={isFavorite(movie.id) ? 'Remove from Favorites' : 'Add to Favorites'}
             >
-              <FaHeart />
-              <span>Favorite</span>
+              <FaHeart color={isFavorited ? '#FF69B4' : '#ffffff'} />
+              {isFavorited ? 'Remove from Favorites' : 'Add to Favorites'}
             </button>
             {movie.trailer && (
               <div className="modal-trailer">
