@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import MovieCard from '../components/MovieCard';
 import MovieDetailsModal from '../components/MovieDetailsModal';
-import { FaSearch, FaTh, FaList, FaFilter, FaClock, FaFilm, FaHeart, FaFire, FaTimes } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useFavorites } from '../context/FavoritesContext';
 import '../styles/Movies.css';
@@ -257,17 +257,9 @@ const Movies = () => {
   });
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
   const [searchFocused, setSearchFocused] = useState(false);
-  const [selectedGenre, setSelectedGenre] = useState('All');
   const [featuredMovie, setFeaturedMovie] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState('');
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [customSearchOpen, setCustomSearchOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
-  const [selectedGenres, setSelectedGenres] = useState([]);
-  const [minRating, setMinRating] = useState(0);
-  const [yearFrom, setYearFrom] = useState('');
-  const [yearTo, setYearTo] = useState('');
-  const [activeFilters, setActiveFilters] = useState([]);
 
   const ViewControls = () => {
     return (
@@ -290,94 +282,16 @@ const Movies = () => {
     );
   };
 
-  // Initialize featured movie on mount
-  useEffect(() => {
-    initializeFeaturedMovie();
-  }, []);
-
-  const initializeFeaturedMovie = () => {
-    const now = new Date().getTime();
-    const savedFeaturedMovie = localStorage.getItem('featuredMovie');
-    const savedTimestamp = localStorage.getItem('featuredMovieTimestamp');
-
-    if (savedFeaturedMovie && savedTimestamp) {
-      const timestamp = parseInt(savedTimestamp);
-      if (now - timestamp < 24 * 60 * 60 * 1000) {
-        const savedMovie = JSON.parse(savedFeaturedMovie);
-        // Get fresh movie data from MOCK_MOVIES
-        const currentMovie = MOCK_MOVIES.find(m => m.id === savedMovie.id);
-        if (currentMovie) {
-          setFeaturedMovie(currentMovie);
-        } else {
-          setNewFeaturedMovie();
-        }
-      } else {
-        setNewFeaturedMovie();
-      }
-    } else {
-      setNewFeaturedMovie();
-    }
-  };
-
-  // Update timer every minute
-  useEffect(() => {
-    const updateTimer = () => {
-      const now = new Date().getTime();
-      const savedTimestamp = localStorage.getItem('featuredMovieTimestamp');
-      
-      if (savedTimestamp) {
-        const timestamp = parseInt(savedTimestamp);
-        const timeLeft = 24 * 60 * 60 * 1000 - (now - timestamp);
-        
-        if (timeLeft <= 0) {
-          initializeFeaturedMovie();
-        } else {
-          const hours = Math.floor(timeLeft / (60 * 60 * 1000));
-          const minutes = Math.floor((timeLeft % (60 * 60 * 1000)) / (60 * 1000));
-          setTimeRemaining(`${hours}h ${minutes}m`);
-        }
-      }
-    };
-
-    updateTimer();
-    const interval = setInterval(updateTimer, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Save view mode to localStorage
-  useEffect(() => {
-    localStorage.setItem('viewMode', viewMode);
-  }, [viewMode]);
-
-  const setNewFeaturedMovie = () => {
-    const trendingMovies = MOCK_MOVIES.filter(movie => movie.trending);
-    const randomMovie = trendingMovies[Math.floor(Math.random() * trendingMovies.length)];
-    setFeaturedMovie(randomMovie);
-    localStorage.setItem('featuredMovie', JSON.stringify(randomMovie));
-    localStorage.setItem('featuredMovieTimestamp', new Date().getTime().toString());
-  };
-
-  // Get unique genres
-  const GENRES = useMemo(() => 
-    [...new Set(MOCK_MOVIES.map(movie => movie.category))].sort(),
-    []
-  );
-
   const filteredMovies = useMemo(() => 
     movies.filter(movie => {
       const searchMatch = movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          movie.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          movie.category.toLowerCase().includes(searchTerm.toLowerCase());
-      const genreMatch = selectedGenre === 'All' || movie.category === selectedGenre;
-      const customGenreMatch = selectedGenres.length === 0 || selectedGenres.includes(movie.category);
-      const ratingMatch = movie.rating >= minRating;
-      const yearMatch = (yearFrom === '' || movie.year >= yearFrom) && (yearTo === '' || movie.year <= yearTo);
-      return searchMatch && genreMatch && customGenreMatch && ratingMatch && yearMatch;
+      return searchMatch;
     }),
-    [movies, searchTerm, selectedGenre, selectedGenres, minRating, yearFrom, yearTo]
+    [movies, searchTerm]
   );
 
-  // Add event listener for opening movie modals
   useEffect(() => {
     const handleOpenMovieModal = (event) => {
       setSelectedMovie(event.detail.movie);
@@ -390,268 +304,54 @@ const Movies = () => {
   const handleSearchSubmit = (e) => {
     if (e.key === 'Enter' || e.type === 'click') {
       setSearchFocused(false);
-      setCustomSearchOpen(false);
     }
-  };
-
-  const handleGenreSelect = (genre) => {
-    if (selectedGenres.includes(genre)) {
-      setSelectedGenres(selectedGenres.filter(g => g !== genre));
-      handleRemoveFilter('genre', genre);
-    } else {
-      setSelectedGenres([...selectedGenres, genre]);
-      handleAddFilter('Genre', genre);
-    }
-  };
-
-  const handleRatingChange = (value) => {
-    setMinRating(value);
-    handleAddFilter('Rating', `${value}+ Stars`);
-  };
-
-  const handleYearChange = () => {
-    if (yearFrom || yearTo) {
-      handleAddFilter('Year', `${yearFrom || 'Any'} - ${yearTo || 'Now'}`);
-    }
-  };
-
-  const handleApplyFilters = () => {
-    setCustomSearchOpen(false);
-  };
-
-  const handleResetFilters = () => {
-    setSelectedGenres([]);
-    setMinRating(0);
-    setYearFrom('');
-    setYearTo('');
-    setActiveFilters([]);
-    setCustomSearchOpen(false);
-  };
-
-  const handleAddFilter = (type, value) => {
-    const newFilter = { id: Date.now(), type, value };
-    setActiveFilters([...activeFilters, newFilter]);
-  };
-
-  const handleRemoveFilter = (filterId) => {
-    setActiveFilters(activeFilters.filter(filter => filter.id !== filterId));
-  };
-
-  const ActiveFilterTags = () => {
-    return (
-      <div className="active-filters">
-        {activeFilters.map(filter => (
-          <div key={filter.id} className="filter-tag">
-            <span className="filter-type">{filter.type}:</span>
-            <span className="filter-value">{filter.value}</span>
-            <button 
-              className="filter-remove" 
-              onClick={() => handleRemoveFilter(filter.id)}
-            >
-              <FaTimes />
-            </button>
-          </div>
-        ))}
-        {activeFilters.length > 0 && (
-          <button 
-            className="clear-filters"
-            onClick={() => setActiveFilters([])}
-          >
-            Clear All
-          </button>
-        )}
-      </div>
-    );
-  };
-
-  const CustomSearchFilter = () => {
-    return (
-      <div className={`custom-search-filter ${customSearchOpen ? 'open' : ''}`}>
-        <div className="filter-header">
-          <h3>Advanced Search</h3>
-          <button onClick={() => setCustomSearchOpen(false)} className="close-button">
-            <FaTimes />
-          </button>
-        </div>
-        
-        <div className="filter-section">
-          <label>Genre</label>
-          <div className="genre-buttons">
-            {GENRES.map(genre => (
-              <button
-                key={genre}
-                className={`genre-filter-btn ${selectedGenres.includes(genre) ? 'active' : ''}`}
-                onClick={() => handleGenreSelect(genre)}
-              >
-                {genre}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="filter-section">
-          <label>Rating</label>
-          <div className="rating-range">
-            <input
-              type="range"
-              min="0"
-              max="10"
-              step="0.5"
-              value={minRating}
-              onChange={(e) => handleRatingChange(parseFloat(e.target.value))}
-            />
-            <span>{minRating}+ Stars</span>
-          </div>
-        </div>
-
-        <div className="filter-section">
-          <label>Year</label>
-          <div className="year-range">
-            <input
-              type="number"
-              placeholder="From"
-              value={yearFrom}
-              onChange={(e) => setYearFrom(e.target.value)}
-            />
-            <span>-</span>
-            <input
-              type="number"
-              placeholder="To"
-              value={yearTo}
-              onChange={(e) => setYearTo(e.target.value)}
-            />
-          </div>
-          <button onClick={handleYearChange}>Apply</button>
-        </div>
-
-        <div className="filter-actions">
-          <button className="apply-filters" onClick={handleApplyFilters}>
-            Apply Filters
-          </button>
-          <button className="reset-filters" onClick={handleResetFilters}>
-            Reset
-          </button>
-        </div>
-      </div>
-    );
   };
 
   return (
     <div className="movies-container">
-      <div className="search-section">
-        <div className="search-controls">
-          <div className="search-bar">
-            <FaSearch className="search-icon" />
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search movies..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onFocus={() => setCustomSearchOpen(true)}
-            />
-          </div>
-          <div className="view-controls">
-            <button
-              className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
-              onClick={() => setViewMode('grid')}
-              aria-label="Grid View"
-            >
-              <BsGrid />
-            </button>
-            <button
-              className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
-              onClick={() => setViewMode('list')}
-              aria-label="List View"
-            >
-              <BsList />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <CustomSearchFilter />
-
-      <div className="filter-section">
-        <div className="genre-filters">
-          <button
-            className={`genre-button ${selectedGenre === 'All' ? 'active' : ''}`}
-            onClick={() => setSelectedGenre('All')}
-          >
-            <FaFilm /> All Genres
-          </button>
-          {GENRES.map(genre => (
-            <button
-              key={genre}
-              className={`genre-button ${selectedGenre === genre ? 'active' : ''}`}
-              onClick={(e) => {
-                // If clicking the X button (right side of active button), reset to All
-                if (selectedGenre === genre && 
-                    e.clientX > e.target.getBoundingClientRect().right - 40) {
-                  setSelectedGenre('All');
-                } else {
-                  setSelectedGenre(genre);
-                }
-              }}
-            >
-              {genre}
-            </button>
-          ))}
-        </div>
-        <ActiveFilterTags />
-      </div>
-
-      {featuredMovie && !searchTerm && selectedGenre === 'All' && (
-        <div className="featured-movie-section">
-          <div className="featured-header">
-            <h2>Movie of the Day</h2>
-            <div className="featured-timer">
-              <FaClock /> Changes in: {timeRemaining}
+      <div className="movies-header">
+        <h1>Movies</h1>
+        <div className="search-section">
+          <div className="search-container">
+            <div className="search-wrapper">
+              <input
+                type="text"
+                placeholder="Search movies..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={handleSearchSubmit}
+                onFocus={() => setSearchFocused(true)}
+                className={searchFocused ? 'focused' : ''}
+              />
+              <button className="search-button" onClick={handleSearchSubmit}>
+                <FaSearch />
+              </button>
             </div>
           </div>
-          <MovieCard movie={featuredMovie} isFeatured={true} allMovies={movies} />
+          <ViewControls />
         </div>
-      )}
+      </div>
 
       <div className={`movies-grid ${viewMode}`}>
-        {filteredMovies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} allMovies={movies} />
+        {filteredMovies.map(movie => (
+          <MovieCard
+            key={movie.id}
+            movie={movie}
+            viewMode={viewMode}
+            isFavorite={isFavorite(movie.id)}
+            onFavoriteClick={() => toggleFavorite(movie)}
+          />
         ))}
       </div>
 
       {selectedMovie && (
         <MovieDetailsModal
           movie={selectedMovie}
-          isOpen={!!selectedMovie}
           onClose={() => setSelectedMovie(null)}
-          allMovies={movies}
+          isFavorite={isFavorite(selectedMovie.id)}
+          onFavoriteClick={() => toggleFavorite(selectedMovie)}
         />
       )}
-
-      <div className="stats-footer">
-        <div className="stats-content">
-          <div className="stats-group">
-            <div className="stat-item">
-              <FaFilm />
-              <span>Total Movies: <span className="stat-value">{movies.length}</span></span>
-            </div>
-            <div className="stat-item">
-              <FaHeart />
-              <span>Favorites: <span className="stat-value">{favorites.length}</span></span>
-            </div>
-          </div>
-          <div className="stats-group">
-            <div className="stat-item">
-              <FaFire />
-              <span>Trending: <span className="stat-value">{movies.filter(m => m.trending).length}</span></span>
-            </div>
-            <div className="stat-item">
-              <FaClock />
-              <span>Featured Refresh: <span className="stat-value">{timeRemaining}</span></span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MovieCard from '../components/MovieCard';
+import { FiEdit2, FiSave, FiTrash2, FiHeart, FiAlertCircle, FiUser } from 'react-icons/fi';
 import { useFavorites } from '../context/FavoritesContext';
 import '../styles/Profile.css';
 
@@ -16,7 +16,9 @@ const Profile = () => {
     username: localStorage.getItem('username') || 'User',
     currentPassword: '',
     newPassword: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    email: localStorage.getItem('email') || 'user@example.com',
+    joinDate: localStorage.getItem('joinDate') || new Date().toISOString().split('T')[0]
   });
 
   const handleInputChange = (e) => {
@@ -32,34 +34,26 @@ const Profile = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setSuccessMessage('');
-
+    
     try {
-      if (userData.newPassword && userData.newPassword.length < 6) {
-        throw new Error('New password must be at least 6 characters long');
-      }
-
       if (userData.newPassword && userData.newPassword !== userData.confirmPassword) {
         throw new Error('New passwords do not match');
       }
 
+      // Simulated API call
       await new Promise(resolve => setTimeout(resolve, 1000));
+      
       localStorage.setItem('username', userData.username);
-
-      if (userData.newPassword) {
-        localStorage.setItem('password', userData.newPassword);
-      }
-
+      localStorage.setItem('email', userData.email);
+      
       setSuccessMessage('Profile updated successfully!');
       setIsEditing(false);
-      
       setUserData(prev => ({
         ...prev,
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
       }));
-
     } catch (err) {
       setError(err.message);
     } finally {
@@ -70,9 +64,10 @@ const Profile = () => {
   const handleDeleteAccount = async () => {
     setLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Simulated API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
       localStorage.clear();
-      navigate('/signup');
+      navigate('/login');
     } catch (err) {
       setError('Failed to delete account. Please try again.');
     } finally {
@@ -81,202 +76,173 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    const username = localStorage.getItem('username');
-    if (!username) {
-      navigate('/signup');
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(''), 3000);
+      return () => clearTimeout(timer);
     }
-  }, [navigate]);
+  }, [successMessage]);
 
   return (
     <div className="profile-container">
-      <div className="profile-header">
-        <div className="profile-avatar" title={userData.username}>
-          {userData.username.charAt(0).toUpperCase()}
+      <div className="profile-content">
+        <div className="profile-header">
+          <div className="profile-avatar">
+            <FiUser className="avatar-icon" />
+          </div>
+          <div className="profile-info">
+            <h1>{userData.username}</h1>
+            <p className="join-date">Member since {new Date(userData.joinDate).toLocaleDateString()}</p>
+            <p className="stats">
+              <span><FiHeart /> {favorites.length} Favorites</span>
+            </p>
+          </div>
+          <button 
+            className={`edit-button ${isEditing ? 'active' : ''}`}
+            onClick={() => setIsEditing(!isEditing)}
+          >
+            {isEditing ? <FiSave /> : <FiEdit2 />}
+            {isEditing ? 'Save Profile' : 'Edit Profile'}
+          </button>
         </div>
-        <div className="profile-info">
-          <h1>Welcome, {userData.username}</h1>
-          {!isEditing && (
-            <button 
-              className="edit-profile-btn"
-              onClick={() => setIsEditing(true)}
-              disabled={loading}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}>
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-              </svg>
-              Edit Profile
-            </button>
-          )}
-        </div>
-      </div>
 
-      {error && (
-        <div className="error-message">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="8" x2="12" y2="12" />
-            <line x1="12" y1="16" x2="12" y2="16" />
-          </svg>
-          {error}
-        </div>
-      )}
+        {successMessage && (
+          <div className="success-message">
+            {successMessage}
+          </div>
+        )}
 
-      {successMessage && (
-        <div className="success-message">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-            <polyline points="22 4 12 14.01 9 11.01" />
-          </svg>
-          {successMessage}
-        </div>
-      )}
+        {error && (
+          <div className="error-message">
+            <FiAlertCircle /> {error}
+          </div>
+        )}
 
-      {isEditing ? (
-        <div className="profile-edit-section">
-          <h2>Edit Your Profile</h2>
-          <form onSubmit={handleUpdateProfile}>
+        {isEditing ? (
+          <form onSubmit={handleUpdateProfile} className="profile-form">
             <div className="form-group">
-              <label htmlFor="username">Username</label>
+              <label>Username</label>
               <input
-                id="username"
                 type="text"
                 name="username"
                 value={userData.username}
                 onChange={handleInputChange}
-                disabled={loading}
-                placeholder="Enter your username"
+                required
               />
             </div>
-
             <div className="form-group">
-              <label htmlFor="currentPassword">Current Password</label>
+              <label>Email</label>
               <input
-                id="currentPassword"
+                type="email"
+                name="email"
+                value={userData.email}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Current Password</label>
+              <input
                 type="password"
                 name="currentPassword"
                 value={userData.currentPassword}
                 onChange={handleInputChange}
-                disabled={loading}
-                placeholder="Enter current password"
+                placeholder="Enter current password to make changes"
               />
             </div>
-
             <div className="form-group">
-              <label htmlFor="newPassword">New Password</label>
+              <label>New Password</label>
               <input
-                id="newPassword"
                 type="password"
                 name="newPassword"
                 value={userData.newPassword}
                 onChange={handleInputChange}
-                disabled={loading}
-                placeholder="Enter new password"
+                placeholder="Leave blank to keep current password"
               />
             </div>
-
             <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm New Password</label>
+              <label>Confirm New Password</label>
               <input
-                id="confirmPassword"
                 type="password"
                 name="confirmPassword"
                 value={userData.confirmPassword}
                 onChange={handleInputChange}
-                disabled={loading}
                 placeholder="Confirm new password"
               />
             </div>
-
-            <div className="profile-actions">
-              <button 
-                type="submit" 
-                className="save-btn"
-                disabled={loading}
-              >
+            <div className="form-actions">
+              <button type="submit" className="save-button" disabled={loading}>
                 {loading ? 'Saving...' : 'Save Changes'}
               </button>
               <button 
-                type="button"
-                className="cancel-btn"
-                onClick={() => {
-                  setIsEditing(false);
-                  setError('');
-                  setUserData(prev => ({
-                    ...prev,
-                    currentPassword: '',
-                    newPassword: '',
-                    confirmPassword: ''
-                  }));
-                }}
-                disabled={loading}
+                type="button" 
+                className="delete-button"
+                onClick={() => setShowDeleteConfirm(true)}
               >
-                Cancel
+                <FiTrash2 /> Delete Account
               </button>
             </div>
           </form>
-        </div>
-      ) : (
-        <>
-          <div className="favorites-section">
-            <h2>My Favorite Movies</h2>
-            {favorites.length === 0 ? (
-              <div className="no-favorites">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                </svg>
-                <p>You haven't added any favorites yet.</p>
-                <button onClick={() => navigate('/movies')} className="browse-movies-btn">
-                  Browse Movies
-                </button>
-              </div>
-            ) : (
-              <div className="favorites-grid">
-                {favorites.map(movie => (
-                  <MovieCard
-                    key={movie.id}
-                    movie={movie}
-                    onFavorite={() => toggleFavorite(movie)}
-                    isFavorite={isFavorite(movie.id)}
-                  />
-                ))}
-              </div>
-            )}
+        ) : (
+          <div className="profile-details">
+            <div className="detail-item">
+              <label>Username</label>
+              <p>{userData.username}</p>
+            </div>
+            <div className="detail-item">
+              <label>Email</label>
+              <p>{userData.email}</p>
+            </div>
           </div>
+        )}
 
-          <div className="danger-zone">
-            <h3>Danger Zone</h3>
-            {!showDeleteConfirm ? (
+        <div className="favorites-section">
+          <h2>My Favorites</h2>
+          {favorites.length > 0 ? (
+            <div className="favorites-grid">
+              {favorites.map(movie => (
+                <div key={movie.id} className="favorite-item">
+                  <img src={movie.poster} alt={movie.title} />
+                  <div className="favorite-overlay">
+                    <h3>{movie.title}</h3>
+                    <button onClick={() => toggleFavorite(movie)}>
+                      <FiHeart className="filled" /> Remove
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="no-favorites">
+              <FiHeart />
+              <h3>No favorites yet</h3>
+              <p>Start exploring movies and add them to your favorites!</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showDeleteConfirm && (
+        <div className="modal-overlay">
+          <div className="delete-confirm-modal">
+            <h2>Delete Account</h2>
+            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+            <div className="modal-actions">
               <button 
-                className="delete-account-btn"
-                onClick={() => setShowDeleteConfirm(true)}
+                className="cancel-button"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="confirm-delete-button"
+                onClick={handleDeleteAccount}
                 disabled={loading}
               >
-                Delete Account
+                {loading ? 'Deleting...' : 'Yes, Delete My Account'}
               </button>
-            ) : (
-              <div className="delete-confirm">
-                <p>Are you sure you want to delete your account? This action cannot be undone.</p>
-                <div className="delete-actions">
-                  <button 
-                    className="confirm-delete-btn"
-                    onClick={handleDeleteAccount}
-                    disabled={loading}
-                  >
-                    {loading ? 'Deleting...' : 'Yes, Delete My Account'}
-                  </button>
-                  <button 
-                    className="cancel-delete-btn"
-                    onClick={() => setShowDeleteConfirm(false)}
-                    disabled={loading}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
