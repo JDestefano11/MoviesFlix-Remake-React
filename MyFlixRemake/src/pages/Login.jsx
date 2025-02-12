@@ -22,7 +22,7 @@ const Login = ({ setIsLoggedIn }) => {
     setTimeout(() => {
       if (email === 'demo@example.com' && password === 'password') {
         setIsLoggedIn(true);
-        navigate('/');
+        navigate('/movies');
       } else {
         setError('Invalid credentials. Please try again.');
       }
