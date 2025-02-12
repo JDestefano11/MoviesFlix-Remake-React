@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { FaStar, FaHeart, FaPlay, FaClock, FaCalendar } from 'react-icons/fa';
 import { BiMoviePlay } from 'react-icons/bi';
-import MovieDetailsModal from './MovieDetailsModal';
-import { useFavorites } from '../context/FavoritesContext';
 import '../styles/MovieCard.css';
 
-const MovieCard = ({ movie, viewMode, isFavorite, onFavoriteClick }) => {
+const MovieCard = ({ movie, viewMode, isFavorite, onFavoriteClick, onMovieClick }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -22,10 +20,11 @@ const MovieCard = ({ movie, viewMode, isFavorite, onFavoriteClick }) => {
     }
   };
 
-  const handleCardClick = () => {
-    // Dispatch custom event to open modal
-    const event = new CustomEvent('openMovieModal', { detail: { movie } });
-    window.dispatchEvent(event);
+  const handleCardClick = (e) => {
+    // Only trigger if not clicking on action buttons
+    if (!e.target.closest('.action-button')) {
+      onMovieClick(movie);
+    }
   };
 
   return (
@@ -34,6 +33,9 @@ const MovieCard = ({ movie, viewMode, isFavorite, onFavoriteClick }) => {
       onClick={handleCardClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      role="button"
+      tabIndex={0}
+      aria-label={`View details for ${movie.title}`}
     >
       <div className="movie-poster">
         <img
@@ -94,12 +96,15 @@ const MovieCard = ({ movie, viewMode, isFavorite, onFavoriteClick }) => {
             {isFavorite ? 'Favorited' : 'Favorite'}
           </button>
           <button 
-            className="action-button"
-            onClick={handleCardClick}
+            className="action-button watch"
+            onClick={(e) => {
+              e.stopPropagation();
+              onMovieClick(movie);
+            }}
             aria-label="Play movie"
           >
             <FaPlay />
-            Watch Now
+            View Details
           </button>
         </div>
       </div>

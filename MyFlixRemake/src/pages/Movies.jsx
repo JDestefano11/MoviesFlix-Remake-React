@@ -260,6 +260,10 @@ const Movies = () => {
   const [selectedGenre, setSelectedGenre] = useState('All');
   const [selectedMovie, setSelectedMovie] = useState(null);
 
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+  };
+
   const ViewControls = () => {
     return (
       <div className="view-controls">
@@ -297,15 +301,6 @@ const Movies = () => {
     }),
     [movies, searchTerm, selectedGenre]
   );
-
-  useEffect(() => {
-    const handleOpenMovieModal = (event) => {
-      setSelectedMovie(event.detail.movie);
-    };
-
-    window.addEventListener('openMovieModal', handleOpenMovieModal);
-    return () => window.removeEventListener('openMovieModal', handleOpenMovieModal);
-  }, []);
 
   const handleSearchSubmit = (e) => {
     if (e.key === 'Enter' || e.type === 'click') {
@@ -402,20 +397,21 @@ const Movies = () => {
             viewMode={viewMode}
             isFavorite={isFavorite(movie.id)}
             onFavoriteClick={() => toggleFavorite(movie)}
+            onMovieClick={handleMovieClick}
           />
         ))}
       </div>
 
       <StatsFooter />
 
-      {selectedMovie && (
-        <MovieDetailsModal
-          movie={selectedMovie}
-          onClose={() => setSelectedMovie(null)}
-          isFavorite={isFavorite(selectedMovie.id)}
-          onFavoriteClick={() => toggleFavorite(selectedMovie)}
-        />
-      )}
+      <MovieDetailsModal
+        movie={selectedMovie}
+        isOpen={!!selectedMovie}
+        onClose={() => setSelectedMovie(null)}
+        isFavorite={isFavorite(selectedMovie?.id)}
+        onFavoriteClick={() => selectedMovie && toggleFavorite(selectedMovie)}
+        allMovies={movies}
+      />
     </div>
   );
 };

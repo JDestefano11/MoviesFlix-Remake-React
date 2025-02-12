@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FaTimes, FaStar, FaHeart } from 'react-icons/fa';
-import { useFavorites } from '../context/FavoritesContext';
 import '../styles/MovieDetailsModal.css';
 
-const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
-  const { toggleFavorite, isFavorite } = useFavorites();
+const MovieDetailsModal = ({ movie, isOpen, onClose, isFavorite, onFavoriteClick, allMovies }) => {
   const [similarMovies, setSimilarMovies] = useState([]);
-  const [isFavorited, setIsFavorited] = useState(false);
-
-  useEffect(() => {
-    if (movie) {
-      setIsFavorited(isFavorite(movie.id));
-    }
-  }, [movie, isFavorite]);
 
   useEffect(() => {
     if (movie && isOpen && allMovies) {
@@ -29,15 +20,9 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
 
   if (!isOpen || !movie) return null;
 
-  const handleFavoriteClick = () => {
-    toggleFavorite(movie);
-    setIsFavorited(!isFavorited);
-  };
-
   const handleSimilarMovieClick = (similarMovie) => {
-    // Close current modal and open new one with similar movie
     onClose();
-    // Small delay to ensure smooth transition
+    // Re-open with new movie after a short delay
     setTimeout(() => {
       const modalEvent = new CustomEvent('openMovieModal', { 
         detail: { movie: similarMovie }
@@ -50,7 +35,7 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         <button className="close-button" onClick={onClose} aria-label="Close modal">
-          <FaTimes color="#ffffff" size={24} />
+          <FaTimes />
         </button>
 
         <div className="modal-header">
@@ -70,11 +55,14 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
               <span>{movie.category}</span>
             </div>
             <button 
-              className={`favorite-btn ${isFavorited ? 'active' : ''}`}
-              onClick={handleFavoriteClick}
+              className={`favorite-btn ${isFavorite ? 'active' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onFavoriteClick();
+              }}
             >
-              <FaHeart color={isFavorited ? '#FF69B4' : '#ffffff'} />
-              {isFavorited ? 'Remove from Favorites' : 'Add to Favorites'}
+              <FaHeart />
+              {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
             </button>
             {movie.trailer && (
               <div className="modal-trailer">
@@ -91,8 +79,7 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
             )}
           </div>
         </div>
-        <div className="modal-actions">
-        </div>
+
         <div className="modal-body">
           <p className="synopsis">{movie.description}</p>
           <div className="movie-details">
@@ -112,21 +99,24 @@ const MovieDetailsModal = ({ movie, isOpen, onClose, allMovies }) => {
               </div>
             )}
           </div>
+
           {similarMovies.length > 0 && (
             <div className="similar-movies">
               <h3>Similar Movies</h3>
               <div className="similar-movies-grid">
                 {similarMovies.map(similarMovie => (
-                  <div 
-                    key={similarMovie.id} 
-                    className="similar-movie"
+                  <div
+                    key={similarMovie.id}
+                    className="similar-movie-card"
                     onClick={() => handleSimilarMovieClick(similarMovie)}
                   >
-                    <img 
-                      src={similarMovie.poster} 
-                      alt={similarMovie.title} 
-                    />
-                    <p>{similarMovie.title}</p>
+                    <img src={similarMovie.poster} alt={similarMovie.title} />
+                    <div className="similar-movie-info">
+                      <h4>{similarMovie.title}</h4>
+                      <span className="rating">
+                        <FaStar /> {similarMovie.rating}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
