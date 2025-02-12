@@ -1,13 +1,15 @@
 :root {
-  --primary-dark: #0a0d14;
-  --primary-light: #e9ecef;
+  --primary-dark: #1a1c2e;
+  --primary-light: #ffffff;
+  --accent-color: #ff6b4a;
+  --accent-secondary: #ff8f3d;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.1);
   --accent-neon: #00f2ff;
   --accent-purple: #6c22bd;
   --accent-pink: #ff0099;
   --danger-red: #ff2957;
   --success-green: #00ffa3;
-  --glass-bg: rgba(16, 20, 34, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 .profile-container {
@@ -17,9 +19,26 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+  background: linear-gradient(135deg, #1a1c2e, #0a0c1a);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-container::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+  opacity: 0.15;
+  filter: contrast(150%) brightness(100%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .profile-header {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 24px;
@@ -40,11 +59,11 @@
   justify-content: center;
   font-size: 2.5rem;
   font-weight: bold;
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
   border-radius: 50%;
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 4px 20px rgba(108, 34, 189, 0.4);
+  box-shadow: 0 4px 20px rgba(255, 107, 74, 0.4);
   transition: transform 0.3s ease;
 }
 
@@ -55,7 +74,7 @@
 .profile-info h1 {
   font-size: 2.5rem;
   margin: 0;
-  background: linear-gradient(to right, var(--accent-neon), var(--accent-purple));
+  background: linear-gradient(to right, var(--accent-color), var(--accent-secondary));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -64,7 +83,7 @@
 
 .edit-profile-btn {
   background: var(--glass-bg);
-  color: var(--accent-neon);
+  color: var(--accent-color);
   border: 1px solid var(--glass-border);
   padding: 8px 16px;
   border-radius: 8px;
@@ -76,12 +95,14 @@
 }
 
 .edit-profile-btn:hover {
-  background: rgba(0, 242, 255, 0.1);
+  background: rgba(255, 107, 74, 0.1);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 242, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(255, 107, 74, 0.2);
 }
 
 .profile-edit-section {
+  position: relative;
+  z-index: 1;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
@@ -97,7 +118,7 @@
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: var(--accent-neon);
+  color: var(--accent-color);
   font-weight: 500;
 }
 
@@ -113,8 +134,8 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--accent-neon);
-  box-shadow: 0 0 0 2px rgba(0, 242, 255, 0.2);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(255, 107, 74, 0.2);
 }
 
 .profile-actions {
@@ -124,7 +145,7 @@
 }
 
 .save-btn, .confirm-delete-btn {
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
   color: white;
   border: none;
   padding: 12px 24px;
@@ -135,7 +156,7 @@
 
 .save-btn:hover, .confirm-delete-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(108, 34, 189, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 107, 74, 0.4);
 }
 
 .cancel-btn, .cancel-delete-btn {
@@ -215,7 +236,7 @@
 .favorites-section h2 {
   font-size: 2rem;
   margin-bottom: 32px;
-  background: linear-gradient(to right, var(--accent-neon), var(--accent-purple));
+  background: linear-gradient(to right, var(--accent-color), var(--accent-secondary));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
