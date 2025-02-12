@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import MovieCard from '../components/MovieCard';
 import MovieDetailsModal from '../components/MovieDetailsModal';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaFilm, FaHeart, FaFire } from 'react-icons/fa';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useFavorites } from '../context/FavoritesContext';
 import '../styles/Movies.css';
@@ -257,8 +257,7 @@ const Movies = () => {
   });
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
   const [searchFocused, setSearchFocused] = useState(false);
-  const [featuredMovie, setFeaturedMovie] = useState(null);
-  const [timeRemaining, setTimeRemaining] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('All');
   const [selectedMovie, setSelectedMovie] = useState(null);
 
   const ViewControls = () => {
@@ -282,14 +281,21 @@ const Movies = () => {
     );
   };
 
+  // Get unique genres
+  const genres = useMemo(() => {
+    const allGenres = movies.map(movie => movie.category);
+    return ['All', ...new Set(allGenres)];
+  }, [movies]);
+
   const filteredMovies = useMemo(() => 
     movies.filter(movie => {
       const searchMatch = movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          movie.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          movie.category.toLowerCase().includes(searchTerm.toLowerCase());
-      return searchMatch;
+      const genreMatch = selectedGenre === 'All' || movie.category === selectedGenre;
+      return searchMatch && genreMatch;
     }),
-    [movies, searchTerm]
+    [movies, searchTerm, selectedGenre]
   );
 
   useEffect(() => {
@@ -307,10 +313,55 @@ const Movies = () => {
     }
   };
 
+  const StatsFooter = () => {
+    const trendingCount = useMemo(() => 
+      movies.filter(m => m.trending).length,
+      [movies]
+    );
+
+    const currentGenreCount = filteredMovies.length;
+    const totalMovies = movies.length;
+    const favoritesCount = favorites.length;
+
+    return (
+      <div className="stats-footer">
+        <div className="stats-content">
+          <div className="stats-group">
+            <div className="stat-item">
+              <FaFilm />
+              <div className="stat-info">
+                <span className="stat-label">Movies</span>
+                <span className="stat-value">
+                  {currentGenreCount}
+                  {selectedGenre !== 'All' && (
+                    <span className="stat-total">/{totalMovies}</span>
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="stat-item">
+              <FaHeart />
+              <div className="stat-info">
+                <span className="stat-label">Favorites</span>
+                <span className="stat-value">{favoritesCount}</span>
+              </div>
+            </div>
+            <div className="stat-item">
+              <FaFire />
+              <div className="stat-info">
+                <span className="stat-label">Trending</span>
+                <span className="stat-value">{trendingCount}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="movies-container">
       <div className="movies-header">
-        <h1>Movies</h1>
         <div className="search-section">
           <div className="search-container">
             <div className="search-wrapper">
@@ -327,8 +378,19 @@ const Movies = () => {
                 <FaSearch />
               </button>
             </div>
+            <ViewControls />
           </div>
-          <ViewControls />
+        </div>
+        <div className="genre-pills">
+          {genres.map(genre => (
+            <button
+              key={genre}
+              className={`genre-pill ${selectedGenre === genre ? 'active' : ''}`}
+              onClick={() => setSelectedGenre(genre)}
+            >
+              {genre}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -343,6 +405,8 @@ const Movies = () => {
           />
         ))}
       </div>
+
+      <StatsFooter />
 
       {selectedMovie && (
         <MovieDetailsModal
